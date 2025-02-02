@@ -3,10 +3,16 @@
 #include <stdbool.h>
 #include <string.h>
 
-// DEFINE CONSTANTS
+// Use non-secure functions
+#ifdef _MSC_VER
+#define _CRT_SECURE_NO_WARNINGS	1
+#endif
+
+// DEFINE MACROS
 
 // Define buffer and string sizes
 #define	INPUT_SIZE	100
+#define	CHAR_SIZE	3
 #define	LINE_SIZE	200
 #define	NUMBER_KEYWORDS	2
 
@@ -23,12 +29,12 @@ typedef struct Line {
 // FUNCTION PROTOYPES
 
 // File Functions
-FILE* loadFile(char[]);
+void loadFile(FILE*, Line**, char[]);
+void saveFile(FILE*, Line**, char[]);
 Line* storeFileData(FILE*);
-int saveFile(FILE*, Line**);
 
 // Linked List Functions
 Line* createNode(char[]);
 int insertNode(Line**, Line*);
 void freeList(Line**);
-void viewLines(Line*);
+void viewLines(Line**);

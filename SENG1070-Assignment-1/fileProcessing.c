@@ -9,10 +9,6 @@
 */
 
 #include "fileProcessing.h"
-// Use non-secure functions
-#ifdef _MSC_VER
-#define _CRT_SECURE_NO_WARNINGS	1
-#endif
 
 // FUNCTIONS
 
@@ -25,8 +21,7 @@
 // RETURNS :
 //			int*		:	Pointer to a file		
 //
-FILE* loadFile(char mode[]) {
-	FILE* file = NULL; // File pointer
+void loadFile(FILE* file, Line** head, char mode[]) {
 	char filename[INPUT_SIZE] = ""; // Name of file
 	char ext[] = ".txt"; // File extension
 	char buffer[INPUT_SIZE] = ""; // Buffer for user input
@@ -61,8 +56,10 @@ FILE* loadFile(char mode[]) {
 	else {
 		// Successfully load the file
 		printf("%s loaded.\n", filename);
+		*head = storeFileData(file);
 		return file;
 	}
+
 }
 
 //
@@ -79,7 +76,6 @@ Line* storeFileData(FILE* file) {
 	char buffer[LINE_SIZE] = ""; // String to store line from file
 	char readLine[LINE_SIZE] = ""; // String to store line to add to node
 	Line* head = NULL; // Initialize pointer to head of linked list
-	Line* newLine = NULL; // Store pointer to new node of linked list
 
 	while (!fileEnd) {
 		// Stop reading file if EOF is reached
@@ -201,12 +197,12 @@ void freeList(Line** head) {
 // DESCRIPTION :
 //			Views all the nodes of the linked list of Lines
 // PARAMETERS :
-//		Line* head		:	Pointer to head of linked list
+//		Line** head		:	Pointer to head of linked list
 // RETURNS :
 //		void			:	This function does not return a value
 //
-void viewLines(Line* head) {
-	Line* current = head;
+void viewLines(Line** head) {
+	Line* current = *head;
 	while (current != NULL) {
 		printf("%s", current->line);
 		current = current->next;
@@ -224,11 +220,11 @@ void viewLines(Line* head) {
 // RETURNS :
 //			int		:	Return code if file was saved properly
 //
-int saveFile(FILE* file, Line** head) {
+void saveFile(FILE* file, Line** head, char mode[]) {
 	// If list is empty, do not write new data
 	if (*head == NULL) {
 		printf("No data to write to file.\n");
-		return INVALID;
+		return;
 	}
 	else
 	{
@@ -247,10 +243,6 @@ int saveFile(FILE* file, Line** head) {
 	// Close the file safely
 	if (fclose(file) != 0) {
 		printf("Error closing file.\n");
-		return INVALID;
-	}
-	else
-	{
-		return VALID;
+		return;
 	}
 }

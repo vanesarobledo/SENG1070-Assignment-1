@@ -154,7 +154,6 @@ void transformLines(Line** head) {
 
 	// Iterate through linked list
 	Line* current = *head;
-	Line* next = NULL;
 
 	while (current != NULL) {
 		switch (transformationChoice)
@@ -224,7 +223,6 @@ void summarizeLines(Line** head) {
 
 	// Iterate through lines of file
 	Line* current = *head;
-	Line* next = NULL;
 
 	// Initialize data
 	int lineCount = 0;
@@ -281,11 +279,11 @@ void summarizeLines(Line** head) {
 				}
 				if (keywordCharacterCount == keywordLength) {
 					keywordFrequency++;
-					keywordCharacterCount = 0;
 				}
 				else {
 					lineIterator++;
 				}
+				keywordCharacterCount = 0;
 			}
 		}
 		
@@ -298,7 +296,7 @@ void summarizeLines(Line** head) {
 	lineLengthAverage = (double)lineLengthSum / (double)lineCount;
 
 	// Print summary to screen
-	printf("----------------------------------------\n");
+	printf("------------------------------------------\n");
 	printf("Summary:\n");
 	printf("Total Number of Lines: %d\n", lineCount);
 	if (keywordFrequency == 0) {
@@ -311,8 +309,34 @@ void summarizeLines(Line** head) {
 		printf("Frequency of '%s': %d times\n", keyword, keywordFrequency);
 	}
 	printf("Average Length of Lines: %.2f characters\n", lineLengthAverage);
-	printf("----------------------------------------\n\n");
+	printf("------------------------------------------\n\n");
 
 }
 
+// FUNCTION : menuChoice
+// DESCRIPTION :
+//		 This function prompts the user to input a menu operation and returns a character
+// PARAMETERS :
+//		 void	:	This function does not take any parameters.
+// RETURNS :
+//		 char	:	User choice
+//
+char menuChoice(void) {
+	char buffer[INPUT_SIZE] = ""; // Buffer to store user input
+	char charInput = '\0'; // Variable to store character
+	bool valid = false; // Flag to loop user input
 
+	while (!valid) {
+		printf("Enter choice: ");
+		fgets(buffer, INPUT_SIZE, stdin); // Get user input with fgets()
+		buffer[strlen(buffer) - 1] = '\0'; // Remove trailing newline character input
+		if (sscanf(buffer, "%c", &charInput) == 0) { // Validate user input with sscanf() 
+			printf("Invalid input. Please try again.\n");
+		}
+		else
+		{
+			valid = true;
+		}
+	}
+	return charInput; // Return user character choice
+}
