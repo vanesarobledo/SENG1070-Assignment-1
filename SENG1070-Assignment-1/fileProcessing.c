@@ -48,7 +48,7 @@ FILE* loadFile(void) {
 		}
 	}
 
-	// Open file for reading
+	// Open file for reading and writing, or creates the file if it doesn't exist
 	file = fopen(filename, "a+");
 	if (file == NULL) {
 		// Exit if there is a failure to open file
