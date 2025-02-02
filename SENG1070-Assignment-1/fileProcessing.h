@@ -4,9 +4,27 @@
 #include <string.h>
 
 // DEFINE CONSTANTS
+
+// Define buffer and string sizes
 #define	INPUT_SIZE	100
 #define	FILENAME_SIZE	150
+#define	LINE_SIZE	200
+
+// Define return codes
+#define	VALID	0
+#define	INVALID	-1
+
+// Define struct to store file lines
+typedef struct Line {
+	char line[LINE_SIZE];
+	struct Line* next;
+}Line;
 
 // FUNCTION PROTOYPES
 FILE* loadFile(void);
-void saveFile(int*);
+Line* storeFileData(FILE*);
+Line* createNode(char[]);
+int insertNode(Line**, char[]);
+void freeList(Line**);
+void viewLines(Line*);
+int saveFile(int*);

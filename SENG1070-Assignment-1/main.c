@@ -16,8 +16,7 @@
 #include "operations.h"
 #include "fileProcessing.h"
 
-// Define constants
-#define	USER_CHOICE_LENGTH	4
+
 
 // FUNCTION PROTOTYPES
 void loadMenu(void);
@@ -25,12 +24,16 @@ char menuChoice(void);
 
 int main(void)
 {
-	// INTIALIZE DATA
+	// INITIALIZE DATA
+
 	FILE* fpFile = NULL; // File pointer
 
+	// Menu operations
 	char choice = NULL; // User choice for menu
-
 	bool running = true; // Flag to loop menu
+
+	// Initialize a linked list of file lines
+	Line* head = NULL;
 
 	while (running) {
 		loadMenu();
@@ -41,6 +44,7 @@ int main(void)
 		// [1] Load file
 		case '1':
 			fpFile = loadFile();
+			head = storeFileData(fpFile);
 			break;
 
 		// [2] View lines
@@ -78,9 +82,12 @@ int main(void)
 					return EXIT_FAILURE;
 				}
 			}
-			// Break loop
+			// Free dynamically-allocated memory
+			freeList(head);
+			// Set loop to false
 			running = false;
 			break;
+
 		// Any other input: invalid choice
 		default:
 			printf("Invalid choice. Please try again.\n\n");
@@ -97,19 +104,22 @@ int main(void)
 // DESCRIPTION :
 //		 This function prints the user menu to the console.
 // PARAMETERS :
-//		 none
+//		 void	:	This function does not take any parameters.
 // RETURNS :
-//		 void
+//		void	:	This function does not return a value.
 //
 void loadMenu(void) {
+	printf("-------------------------------\n");
 	printf("File Processing Operations Menu:\n");
+	printf("-------------------------------\n");
+
 	printf("[1] Load file\n");
 	printf("[2] View lines\n");
 	printf("[3] Filter lines\n");
 	printf("[4] Transform lines\n");
 	printf("[5] Summarize lines\n");
 	printf("[6] Save changes to file \n");
-	printf("[0] Exit program\n");
+	printf("[0] Exit program\n\n");
 }
 
 // menuChoice() borrows some code from: 
@@ -125,9 +135,9 @@ void loadMenu(void) {
 // DESCRIPTION :
 //		 This function prompts the user to input a menu operation and returns a character
 // PARAMETERS :
-//		 none
+//		 void	:	This function does not take any parameters.
 // RETURNS :
-//		 char	: User choice
+//		 char	:	User choice
 //
 char menuChoice(void) {
 	char buffer[INPUT_SIZE] = ""; // Buffer to store user input

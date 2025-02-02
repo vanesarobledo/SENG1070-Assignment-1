@@ -2,7 +2,7 @@
 #include <string.h>
 
 // DEFINE CONSTANTS
-#define STR_SIZE = 100;
+#define	INPUT_SIZE	100
 
 // FUNCTION PROTOTYPES
 void filterLines(char* [], char* []);
