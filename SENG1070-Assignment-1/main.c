@@ -31,6 +31,7 @@ int main(void)
 	bool running = true; // Flag to loop menu
 	char transformationChoice = NULL; // User choice for transformation rule
 	bool validTransform = false; // Flag to loop transformation rule
+	int savedFile; // Store return code for saveFile() function
 
 
 	// Initialize a linked list of file lines
@@ -44,7 +45,7 @@ int main(void)
 		{
 		// [1] Load file
 		case '1':
-			fpFile = loadFile("r");
+			fpFile = loadFile("a+");
 			head = storeFileData(fpFile);
 			break;
 
@@ -101,13 +102,20 @@ int main(void)
 
 		// [5] Summarize lines
 		case '5':
-			printf("Call summarizeLines() here.\n");
+			summarizeLines(&head);
 			break;
 
 		// [6] Save changes to file
 		case '6':
 			fpFile = loadFile("w");
-			saveFile(fpFile, &head);
+			savedFile = saveFile(fpFile, &head);
+			if (savedFile == VALID) {
+				printf("Changes saved to file successfully.\n");
+			}
+			else
+			{
+				printf("Changes not saved to file.\n");
+			}
 			break;
 
 		// [H] Help
@@ -175,7 +183,7 @@ void help(void) {
 	printf("[ 1 ] Load file: This option data from a .txt file after you provide the name. If there is nothing in the file, then data will not be loaded. The maximum line size is 200 characters.\n\n");
 	printf("[ 2 ] View lines: This option displays the data loaded from the .txt file.\n\n");
 	printf("[ 3 ] Filter lines: This option allows you to enter two keywords to filter the lines of the file. If the keyword is present in the line, the line is deleted.\n\n");
-	printf("[ 4 ] Transform lines: This option allows you to transform each line of the file depending on a transformation rule: uppercase (u), lowercase (l), or reverse. (r).\n");
+	printf("[ 4 ] Transform lines: This option allows you to transform each line of the file depending on a transformation rule: uppercase (u/U), lowercase (l/L), or reverse. (r/R).\n");
 	printf("Hey, since you actually opened the help documentation, here's a secret: there is an extra rule to transform lines. Enter '*' to change every line to 'Glory to Arstotzka.'.\n\n");
 	printf("[ 5 ] Summarize lines: This option allows you to enter a keyword and displays the total number of lines in the file, the frequency of the keyword you specified, and the average length of each line.\n\n");
 	printf("[ 6 ] Save changes to file: This option saves any filtered or transformed lines to a file. If you specify the name of a file that already exists, it will overwrite the data. \n\n");

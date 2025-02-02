@@ -9,6 +9,6 @@
 // FUNCTION PROTOTYPES
 void filterLines(Line**);
 void transformLines(Line**, char);
-//void summarizeLines(char* [], char* []);
+void summarizeLines(Line**);
 
 

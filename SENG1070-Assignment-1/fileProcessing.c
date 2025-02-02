@@ -92,11 +92,14 @@ Line* storeFileData(FILE* file) {
 		{
 			// Assign data to Line struct
 			fgets(buffer, LINE_SIZE, file);
-			// Validate line input
+			// Validate input from file
 			if (sscanf(buffer, "%s", &readLine) > 0) {
-				strncpy(readLine, buffer, LINE_SIZE);
-				// Insert node into linked list
-				insertNode(&head, createNode(readLine));
+				// Make sure line isn't empty
+				if (strlen(readLine) != 0) {
+					strncpy(readLine, buffer, LINE_SIZE);
+					// Insert node into linked list
+					insertNode(&head, createNode(readLine));
+				}
 			}
 		}
 	}
@@ -229,8 +232,12 @@ int saveFile(FILE* file, Line** head) {
 		// Iterate through linked list and write each line
 		Line* current = *head;
 		while (current != NULL) {
-			if (fprintf(file, "%s", current->line) > 0) {
-				current = current->next;
+			// Ensure line isn't empty
+			if (strlen(current->line) != 0) {
+				// Write to file
+				if (fprintf(file, "%s", current->line) > 0) {
+					current = current->next;
+				}
 			}
 		}
 	}
@@ -241,7 +248,6 @@ int saveFile(FILE* file, Line** head) {
 	}
 	else
 	{
-		printf("Changes saved to file.\n");
 		return VALID;
 	}
 }
