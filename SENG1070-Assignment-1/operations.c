@@ -9,6 +9,11 @@
 */
 
 #include "operations.h"
+// Use non-secure functions
+#ifdef _MSC_VER
+#define _CRT_SECURE_NO_WARNINGS	1
+#endif
+
 
 //
 // FUNCTION : filterLines
@@ -120,7 +125,7 @@ void transformLines(Line** head) {
 		return;
 	}
 
-	char transformationChoice = NULL; // User choice for transformation rule
+	char transformationChoice = '\0'; // User choice for transformation rule
 	bool validTransform = false; // Flag to loop transformation rule
 
 	// Prompt user for transformation rule
@@ -143,6 +148,7 @@ void transformLines(Line** head) {
 			break;
 		default:
 			printf("Invalid transformation rule. Please try again.\n");
+			break;
 		}
 	}
 
@@ -156,17 +162,17 @@ void transformLines(Line** head) {
 			// Upercase transformation
 			case 'u':
 			case 'U':
-				strncpy(current->line, strupr(current->line), LINE_SIZE);
+				strncpy(current->line, _strupr(current->line), LINE_SIZE);
 				break;
 			// Reverse transformation
 			case 'r':
 			case 'R':
-				strncpy(current->line, strrev(current->line), LINE_SIZE);
+				strncpy(current->line, _strrev(current->line), LINE_SIZE);
 				break;
 			// Lowercase transformation
 			case 'l':
 			case 'L':
-				strncpy(current->line, strlwr(current->line), LINE_SIZE);
+				strncpy(current->line, _strlwr(current->line), LINE_SIZE);
 				break;
 			// Secret transformation
 			case '*':
@@ -230,16 +236,15 @@ void summarizeLines(Line** head) {
 	int keywordFrequency = 0;
 
 	// Iterator variables for keywords
-	int keywordLength = strlen(keyword);
+	int keywordLength = (int)strlen(keyword);
 	int lineIterator;
 	int keywordIterator;
 	int keywordCharacterCount = 0;
 
-
 	// Convert line and keyword to lowercase to be case-insensitive
 	char transformedLine[LINE_SIZE];
 	char transformedKeyword[LINE_SIZE];
-	strncpy(transformedKeyword, strlwr(keyword), LINE_SIZE);
+	strncpy(transformedKeyword, _strlwr(keyword), LINE_SIZE);
 	transformedKeyword[keywordLength] = '\0';
 
 	while (current != NULL) {
@@ -249,11 +254,12 @@ void summarizeLines(Line** head) {
 		// Count frequency of keyword:
 
 		// Store line length
-		lineLength = strlen(current->line);
+		lineLength = (int)strlen(current->line);
 
 		// Comnvert line to lowercase
-		strncpy(transformedLine, strlwr(current->line), LINE_SIZE);
+		strncpy(transformedLine, current->line, LINE_SIZE);
 		transformedLine[lineLength] = '\0'; // Ensure null-termination
+		_strlwr(transformedLine); // Transform to lowercase to match keyword
 
 		// Check if keyword exists in string
 		// Algorithm used: 

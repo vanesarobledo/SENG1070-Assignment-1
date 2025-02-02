@@ -9,7 +9,10 @@
 */
 
 #include "fileProcessing.h"
-#pragma warning(disable:4996) // Disable warnings in Visual Studio
+// Use non-secure functions
+#ifdef _MSC_VER
+#define _CRT_SECURE_NO_WARNINGS	1
+#endif
 
 // FUNCTIONS
 

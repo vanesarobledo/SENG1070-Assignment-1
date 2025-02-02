@@ -11,7 +11,10 @@
 */
 
 #include <stdio.h>
-#pragma warning(disable:4996) // Disable warnings in Visual Studio
+// Use non-secure functions
+#ifdef _MSC_VER
+#define _CRT_SECURE_NO_WARNINGS	1
+#endif
 
 #include "operations.h"
 
@@ -42,7 +45,7 @@ int main(void)
 	FILE* fpFile = NULL; // File pointer
 
 	// Menu operations
-	char choice = NULL; // User choice for menu
+	char choice = '\0'; // User choice for menu
 	bool running = true; // Flag to loop menu
 	int savedFile; // Store return code for saveFile() function
 
@@ -195,7 +198,7 @@ void help(void) {
 //
 char menuChoice(void) {
 	char buffer[INPUT_SIZE] = ""; // Buffer to store user input
-	char charInput = NULL; // Variable to store character
+	char charInput = '\0'; // Variable to store character
 	bool valid = false; // Flag to loop user input
 
 	while (!valid) {
