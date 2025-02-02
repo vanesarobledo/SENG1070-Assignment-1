@@ -20,6 +20,21 @@ void loadMenu(void);
 void help(void);
 char menuChoice(void);
 
+// DISPATCH TABLE
+// Transformation Functions
+enum Transformations {
+	FILTER,		// Index 0: Points to filtering lines function
+	TRANSFORM,	// Index 1: Points to transforming lines function
+	SUMMARIZE	// Index 2: Points to summarizing function
+};
+typedef int processingFunction(Line** head);
+processingFunction *dispatchProcessing[] = {
+	filterLines,	
+	transformLines,	
+	summarizeLines,	
+};
+
+
 int main(void)
 {
 	// INITIALIZE DATA
@@ -29,8 +44,6 @@ int main(void)
 	// Menu operations
 	char choice = NULL; // User choice for menu
 	bool running = true; // Flag to loop menu
-	char transformationChoice = NULL; // User choice for transformation rule
-	bool validTransform = false; // Flag to loop transformation rule
 	int savedFile; // Store return code for saveFile() function
 
 
@@ -61,48 +74,21 @@ int main(void)
 
 		// [3] Filter lines
 		case '3':
-			filterLines(&head);
+			dispatchProcessing[FILTER](&head);
 			printf("Filtered lines: \n");
 			viewLines(head);
 			break;
 
 		// [4] Transform lines
 		case '4':
-			// Prompt user for transformation rule
-			while (!validTransform) {
-				printf("Select transformation rule:\n");
-				printf("Uppercase (U or u)\n");
-				printf("Lowercase (L or l)\n");
-				printf("Reverse (R or r)\n");
-				transformationChoice = menuChoice();
-				switch (transformationChoice)
-				{
-				case 'u':
-				case 'U':
-				case 'l':
-				case 'L':
-				case 'r':
-				case 'R':
-				case '*':
-					validTransform = true;
-					break;
-				default:
-					printf("Invalid transformation rule. Please try again.\n");
-				}
-				transformLines(&head, transformationChoice);
-				printf("Transformed Lines:\n");
-				viewLines(head);
-
-			}
-			// Reset transformation values
-			validTransform = false;
-			transformationChoice = NULL;
-
+			dispatchProcessing[TRANSFORM](&head);
+			printf("Transformed Lines:\n");
+			viewLines(head);
 			break;
 
 		// [5] Summarize lines
 		case '5':
-			summarizeLines(&head);
+			dispatchProcessing[SUMMARIZE](&head);
 			break;
 
 		// [6] Save changes to file
@@ -110,11 +96,11 @@ int main(void)
 			fpFile = loadFile("w");
 			savedFile = saveFile(fpFile, &head);
 			if (savedFile == VALID) {
-				printf("Changes saved to file successfully.\n");
+				printf("Changes saved to file successfully.\n\n");
 			}
 			else
 			{
-				printf("Changes not saved to file.\n");
+				printf("Changes not saved to file.\n\n");
 			}
 			break;
 

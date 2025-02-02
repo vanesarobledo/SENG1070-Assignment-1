@@ -113,11 +113,37 @@ void filterLines(Line** head) {
 // RETURNS :
 //			void	:	This function does not return a value.
 //
-void transformLines(Line** head, char rule) {
+void transformLines(Line** head) {
 	// If linked list is empty, do not transform lines
 	if (*head == NULL) {
 		printf("No data loaded to transform.\n");
 		return;
+	}
+
+	char transformationChoice = NULL; // User choice for transformation rule
+	bool validTransform = false; // Flag to loop transformation rule
+
+	// Prompt user for transformation rule
+	while (!validTransform) {
+		printf("Select transformation rule:\n");
+		printf("Uppercase (U or u)\n");
+		printf("Lowercase (L or l)\n");
+		printf("Reverse (R or r)\n");
+		transformationChoice = menuChoice();
+		switch (transformationChoice)
+		{
+		case 'u':
+		case 'U':
+		case 'l':
+		case 'L':
+		case 'r':
+		case 'R':
+		case '*':
+			validTransform = true;
+			break;
+		default:
+			printf("Invalid transformation rule. Please try again.\n");
+		}
 	}
 
 	// Iterate through linked list
@@ -125,7 +151,7 @@ void transformLines(Line** head, char rule) {
 	Line* next = NULL;
 
 	while (current != NULL) {
-		switch (rule)
+		switch (transformationChoice)
 		{
 			// Upercase transformation
 			case 'u':
@@ -179,7 +205,7 @@ void summarizeLines(Line** head) {
 
 	while (!valid) {
 		// Prompt the user to enter keyword
-		printf("Enter keyword to search (case-sensitive): ");
+		printf("Enter keyword to search (case-insensitive): ");
 		fgets(buffer, INPUT_SIZE, stdin);
 		// Validate input
 		if (sscanf(buffer, "%s", &keyword) == 1) {

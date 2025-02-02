@@ -8,7 +8,5 @@
 
 // FUNCTION PROTOTYPES
 void filterLines(Line**);
-void transformLines(Line**, char);
+void transformLines(Line**);
 void summarizeLines(Line**);
-
-
