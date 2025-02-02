@@ -10,13 +10,6 @@
 
 #include "operations.h"
 
-// FUNCTION DEFINITIONS
-
-
-void getKeywords(char* keywords[]) {
-
-}
-
 //
 // FUNCTION : filterLines
 // DESCRIPTION :
@@ -25,27 +18,28 @@ void getKeywords(char* keywords[]) {
 //			Line** head	:	Pointer to head of linked list of Lines
 // RETURNS :
 //			void		:	This function does not return a value
+//
 void filterLines(Line** head) {
-	char buffer[KEYWORD_SIZE] = ""; // Buffer to store user input
-	char keyword[KEYWORD_SIZE] = ""; // Store keyword temporarily
-	char keywords[NUMBER_KEYWORDS][KEYWORD_SIZE] = {"", ""}; // Array of keywords
-	bool valid = false; // Flag to loop until valid input
-
+	// If linked list is empty, do not check for keywords
 	if (head == NULL) {
 		printf("No data loaded to filter.\n");
 		return;
 	}
+
+	char buffer[INPUT_SIZE] = ""; // Buffer to store user input
+	char keyword[INPUT_SIZE] = ""; // Store keyword temporarily
+	bool valid = false; // Flag to loop until valid input
+	char keywords[NUMBER_KEYWORDS][INPUT_SIZE] = { "" }; // Array of keywords
 
 	for (int i = 0; i < NUMBER_KEYWORDS; i++) {
 		valid = false;
 		while (!valid) {
 			// Prompt the user to enter keyword
 			printf("Enter keyword %d: ", i + 1);
-			fgets(buffer, KEYWORD_SIZE, stdin);
+			fgets(buffer, INPUT_SIZE, stdin);
 			// Validate input
 			if (sscanf(buffer, "%s", &keyword) == 1) {
-				//keywords[i] = keyword;
-				strncpy(keywords[i], keyword, KEYWORD_SIZE);
+				strncpy(keywords[i], keyword, INPUT_SIZE);
 				valid = true;
 			}
 			else {
@@ -53,9 +47,6 @@ void filterLines(Line** head) {
 			}
 		}
 	}
-
-	printf("%s\n", keywords[0]);
-	printf("%s\n", keywords[1]);
 
 	// Iterate through lines of file
 	Line* current = *head;

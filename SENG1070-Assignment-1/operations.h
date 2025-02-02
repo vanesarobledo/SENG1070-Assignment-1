@@ -6,7 +6,6 @@
 #include "fileProcessing.h"
 
 // FUNCTION PROTOTYPES
-//void getKeywords(char*);
 void filterLines(Line**);
 //void transformLines(char* [], char[]);
 //void summarizeLines(char* [], char* []);

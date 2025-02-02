@@ -41,9 +41,8 @@ int main(void)
 		{
 		// [1] Load file
 		case '1':
-			fpFile = loadFile();
+			fpFile = loadFile("r");
 			head = storeFileData(fpFile);
-			fpFile = NULL;
 			break;
 
 		// [2] View lines
@@ -75,7 +74,8 @@ int main(void)
 
 		// [6] Save changes to file
 		case '6':
-			printf("Call saveFile() here.\n");
+			fpFile = loadFile("w");
+			saveFile(fpFile, &head);
 			break;
 
 		// [0] Exit the program

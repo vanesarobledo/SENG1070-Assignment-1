@@ -18,11 +18,11 @@
 //			This function asks a user for the name of a file and loads it (or creates it if it doesn't exist)
 //			and returns the file pointer
 // PARAMETERS :
-//			none
+//			char mode[]	:	Mode to open file
 // RETURNS :
-//			int*	:	Pointer to a file		
+//			int*		:	Pointer to a file		
 //
-FILE* loadFile(void) {
+FILE* loadFile(char mode[]) {
 	FILE* file = NULL; // File pointer
 	char filename[INPUT_SIZE] = ""; // Name of file
 	char ext[] = ".txt"; // File extension
@@ -49,7 +49,7 @@ FILE* loadFile(void) {
 	}
 
 	// Open file for reading and writing, or creates the file if it doesn't exist
-	file = fopen(filename, "a+");
+	file = fopen(filename, mode);
 	if (file == NULL) {
 		// Exit if there is a failure to open file
 		printf("Error opening file. Exiting program...\n");
@@ -72,7 +72,6 @@ FILE* loadFile(void) {
 //		Line*		:	Pointer to a linked list of Lines
 //
 Line* storeFileData(FILE* file) {
-	// Initialize data
 	bool fileEnd = false; // Flag while reading data from file
 	char buffer[LINE_SIZE] = ""; // String to store line from file
 	char readLine[LINE_SIZE] = ""; // String to store line to add to node
@@ -161,7 +160,7 @@ int insertNode(Line** head, Line* newLine) {
 		*head = newLine;
 		return VALID;
 	}
-	// Iterate through linked list until the tail node is found, then add it to end of  linked list
+	// Iterate through linked list until the tail node is found, then add it to end of linked list
 	Line* current = *head;
 	while (current->next != NULL) {
 		current = current->next;
@@ -212,12 +211,37 @@ void viewLines(Line* head) {
 //
 // FUNCTION : saveFile
 // DESCRIPTION :
-//			
+//			This function saves any changes to file
 // PARAMETERS :
-//		int* file	:	Pointer to file
+//		FILE* file	:	Pointer to file
+//		Line** head	:	Pointer to head of linked list of Lines
 // RETURNS :
 //			int		:	Return code if file was saved properly
 //
-int saveFile(int* file) {
-	return 0;
+int saveFile(FILE* file, Line** head) {
+	// If list is empty, do not write new data
+	if (*head == NULL) {
+		printf("No data to write to file.\n");
+		return INVALID;
+	}
+	else
+	{
+		// Iterate through linked list and write each line
+		Line* current = *head;
+		while (current != NULL) {
+			if (fprintf(file, "%s", current->line) > 0) {
+				current = current->next;
+			}
+		}
+	}
+	// Close the file safely
+	if (fclose(file) != 0) {
+		printf("Error closing file.\n");
+		return INVALID;
+	}
+	else
+	{
+		printf("Changes saved to file.\n");
+		return VALID;
+	}
 }

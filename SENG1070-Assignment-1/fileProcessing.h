@@ -9,7 +9,6 @@
 #define	INPUT_SIZE	100
 #define	LINE_SIZE	200
 #define	NUMBER_KEYWORDS	2
-#define	KEYWORD_SIZE	201
 
 // Define return codes
 #define	VALID	0
@@ -19,13 +18,17 @@
 typedef struct Line {
 	char line[LINE_SIZE];
 	struct Line* next;
-}Line;
+} Line;
 
 // FUNCTION PROTOYPES
-FILE* loadFile(void);
+
+// File Functions
+FILE* loadFile(char[]);
 Line* storeFileData(FILE*);
+int saveFile(FILE*, Line**);
+
+// Linked List Functions
 Line* createNode(char[]);
 int insertNode(Line**, Line*);
 void freeList(Line**);
 void viewLines(Line*);
-int saveFile(int*);
