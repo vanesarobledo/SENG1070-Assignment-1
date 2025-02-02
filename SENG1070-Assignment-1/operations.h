@@ -1,11 +1,14 @@
 #include <stdio.h>
 #include <string.h>
+#pragma once
+#pragma warning(disable:4996) // Disable warnings in Visual Studio
 
-// DEFINE CONSTANTS
-#define	INPUT_SIZE	100
+#include "fileProcessing.h"
 
 // FUNCTION PROTOTYPES
-void filterLines(char* [], char* []);
-void transformLines(char* [], char[]);
-void summarizeLines(char* [], char* []);
+//void getKeywords(char*);
+void filterLines(Line**);
+//void transformLines(char* [], char[]);
+//void summarizeLines(char* [], char* []);
+
 

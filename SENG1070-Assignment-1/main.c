@@ -14,9 +14,6 @@
 #pragma warning(disable:4996) // Disable warnings in Visual Studio
 
 #include "operations.h"
-#include "fileProcessing.h"
-
-
 
 // FUNCTION PROTOTYPES
 void loadMenu(void);
@@ -32,6 +29,7 @@ int main(void)
 	char choice = NULL; // User choice for menu
 	bool running = true; // Flag to loop menu
 
+
 	// Initialize a linked list of file lines
 	Line* head = NULL;
 
@@ -45,16 +43,24 @@ int main(void)
 		case '1':
 			fpFile = loadFile();
 			head = storeFileData(fpFile);
+			fpFile = NULL;
 			break;
 
 		// [2] View lines
 		case '2':
-			printf("Call viewLines() here.\n");
+			if (head != NULL) {
+				viewLines(head);
+			}
+			else {
+				printf("No data loaded.\n");
+			}
 			break;
 
 		// [3] Filter lines
 		case '3':
-			printf("Call filterLines() here.\n");
+			filterLines(&head);
+			printf("Filtered lines: \n");
+			viewLines(head);
 			break;
 
 		// [4] Transform lines
@@ -74,18 +80,13 @@ int main(void)
 
 		// [0] Exit the program
 		case '0':
-			printf("Exiting program...");
-			// Close file if it is open
-			if (fpFile != NULL) {
-				if (fclose(fpFile) != 0) {
-					printf("Error closing file. Exiting program...\n");
-					return EXIT_FAILURE;
-				}
-			}
 			// Free dynamically-allocated memory
-			freeList(head);
+			if (head != NULL) {
+				freeList(&head);
+			}
 			// Set loop to false
 			running = false;
+			printf("Exiting program...\n");
 			break;
 
 		// Any other input: invalid choice

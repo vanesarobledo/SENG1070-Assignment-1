@@ -7,8 +7,9 @@
 
 // Define buffer and string sizes
 #define	INPUT_SIZE	100
-#define	FILENAME_SIZE	150
 #define	LINE_SIZE	200
+#define	NUMBER_KEYWORDS	2
+#define	KEYWORD_SIZE	201
 
 // Define return codes
 #define	VALID	0
@@ -24,7 +25,7 @@ typedef struct Line {
 FILE* loadFile(void);
 Line* storeFileData(FILE*);
 Line* createNode(char[]);
-int insertNode(Line**, char[]);
+int insertNode(Line**, Line*);
 void freeList(Line**);
 void viewLines(Line*);
 int saveFile(int*);

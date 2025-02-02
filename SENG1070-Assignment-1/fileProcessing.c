@@ -24,7 +24,7 @@
 //
 FILE* loadFile(void) {
 	FILE* file = NULL; // File pointer
-	char filename[FILENAME_SIZE] = ""; // Name of file
+	char filename[INPUT_SIZE] = ""; // Name of file
 	char ext[] = ".txt"; // File extension
 	char buffer[INPUT_SIZE] = ""; // Buffer for user input
 
@@ -53,7 +53,7 @@ FILE* loadFile(void) {
 	if (file == NULL) {
 		// Exit if there is a failure to open file
 		printf("Error opening file. Exiting program...\n");
-		return EXIT_FAILURE;
+		exit(EXIT_FAILURE);
 	}
 	else {
 		// Successfully load the file
@@ -65,21 +65,19 @@ FILE* loadFile(void) {
 //
 // FUNCTION : storeFileData
 // DESCRIPTION :
-//			This function takes a file pointer to a list of lines and saves them to a linked list
+//			This function takes a file pointer and saves each lline to a linked list of Lines
 // PARAMETERS :
 //		int* file	:	Pointer to file
-//		int* head	:	Pointer to head of linked list
 // RETURNS :
-//			
+//		Line*		:	Pointer to a linked list of Lines
 //
 Line* storeFileData(FILE* file) {
 	// Initialize data
 	bool fileEnd = false; // Flag while reading data from file
-	char buffer[LINE_SIZE] = ""; // Buffer to store read line
-	char readLine[LINE_SIZE] = ""; // Store line to add to node
-	Line* head = NULL;
-	Line* newLine = NULL; // Store new node
-
+	char buffer[LINE_SIZE] = ""; // String to store line from file
+	char readLine[LINE_SIZE] = ""; // String to store line to add to node
+	Line* head = NULL; // Initialize pointer to head of linked list
+	Line* newLine = NULL; // Store pointer to new node of linked list
 
 	while (!fileEnd) {
 		// Stop reading file if EOF is reached
@@ -89,31 +87,43 @@ Line* storeFileData(FILE* file) {
 		// Stop reading file if some file error occurs
 		else if (ferror(file)) {
 			printf("Error reading file.\n");
-			return INVALID;
+			return head;
 		}
 		else
 		{
 			// Assign data to Line struct
 			fgets(buffer, LINE_SIZE, file);
-			strncpy(readLine, buffer, LINE_SIZE);
-			printf("%s", readLine);
-			insertNode(&head, createNode(readLine));
+			// Validate line input
+			if (sscanf(buffer, "%s", &readLine) > 0) {
+				strncpy(readLine, buffer, LINE_SIZE);
+				// Insert node into linked list
+				insertNode(&head, createNode(readLine));
+			}
 		}
 	}
 
 	// Close the file safely
 	if (fclose(file) != 0) {
 		printf("Error closing file.\n");
-		return INVALID;
+		return head;
 	}
 
-	printf("\nData successfully loaded from file.\n\n");
+	// Print if data was loaded from file
+	if (head != NULL) {
+		printf("Data successfully loaded from file.\n\n");
+	}
+	else
+	{
+		printf("No data loaded from file.\n\n");
+	}
+
+	return head;
 }
 
 //
 // FUNCTION : createNode
 // DESCRIPTION :
-//			Creates a Line node for the linked list
+//			Creates a node for the linked list of Lines
 // PARAMETERS :
 //		char line[]	:	The line to save to the node
 // RETURNS :
@@ -138,7 +148,7 @@ Line* createNode(char line[]) {
 //
 // FUNCTION : insertNode
 // DESCRIPTION :
-//			Adds a node to the tail end of linked list of lines
+//			Adds a node to the tail end of linked list of Lines
 // PARAMETERS :
 //		Line** head		:	Pointer to head of linked list
 //		Line* newLine	:	Node to add to linked list
@@ -151,8 +161,7 @@ int insertNode(Line** head, Line* newLine) {
 		*head = newLine;
 		return VALID;
 	}
-
-	// Iterate through linked list until the tail node is found, then add it to linked list
+	// Iterate through linked list until the tail node is found, then add it to end of  linked list
 	Line* current = *head;
 	while (current->next != NULL) {
 		current = current->next;
@@ -179,16 +188,25 @@ void freeList(Line** head) {
 		free(current);
 		current = next;
 	}
+	*head = NULL;
 }
 
-
-void viewLines(int* head) {
+//
+// FUNCTION : viewLines
+// DESCRIPTION :
+//			Views all the nodes of the linked list of Lines
+// PARAMETERS :
+//		Line* head		:	Pointer to head of linked list
+// RETURNS :
+//		void			:	This function does not return a value
+//
+void viewLines(Line* head) {
 	Line* current = head;
-	Line* next;
 	while (current != NULL) {
 		printf("%s", current->line);
 		current = current->next;
 	}
+	printf("\n");
 }
 
 //
@@ -201,5 +219,5 @@ void viewLines(int* head) {
 //			int		:	Return code if file was saved properly
 //
 int saveFile(int* file) {
-
+	return 0;
 }
