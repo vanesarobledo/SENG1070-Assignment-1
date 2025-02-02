@@ -20,7 +20,7 @@
 //			void		:	This function does not return a value
 //
 void filterLines(Line** head) {
-	// If linked list is empty, do not check for keywords
+	// If linked list is empty, do not check for keywords to filter
 	if (head == NULL) {
 		printf("No data loaded to filter.\n");
 		return;
@@ -35,7 +35,7 @@ void filterLines(Line** head) {
 		valid = false;
 		while (!valid) {
 			// Prompt the user to enter keyword
-			printf("Enter keyword %d: ", i + 1);
+			printf("Enter keyword %d (case-sensitive): ", i + 1);
 			fgets(buffer, INPUT_SIZE, stdin);
 			// Validate input
 			if (sscanf(buffer, "%s", &keyword) == 1) {
@@ -105,15 +105,55 @@ void filterLines(Line** head) {
 //
 // FUNCTION : transformLines
 // DESCRIPTION :
-//			
+//			This function accepts a list of lines and transforms them based on a transformation rule:
+//			UPPERCASE (u), lowercase (l), or reverse (r)
 // PARAMETERS :
-//				
+//			Line** head	:	Pointer to head of linked list of Lines
+//			char[] rule	:	The transformation rule to be applied to each line
 // RETURNS :
-//			
+//			void	:	This function does not return a value.
 //
-//void transformLines(char* lines[], char rule[]) {
-//
-//}
+void transformLines(Line** head, char rule) {
+	// If linked list is empty, do not transform lines
+	if (*head == NULL) {
+		printf("No data loaded to transform.\n");
+		return;
+	}
+
+	// Iterate through linked list
+	Line* current = *head;
+	Line* next = NULL;
+
+	while (current != NULL) {
+		switch (rule)
+		{
+			// Upercase transformation
+			case 'u':
+			case 'U':
+				strncpy(current->line, strupr(current->line), LINE_SIZE);
+				break;
+			// Reverse transformation
+			case 'r':
+			case 'R':
+				strncpy(current->line, strrev(current->line), LINE_SIZE);
+				break;
+			// Lowercase transformation
+			case 'l':
+			case 'L':
+				strncpy(current->line, strlwr(current->line), LINE_SIZE);
+				break;
+			// Secret transformation
+			case '*':
+				strncpy(current->line, "Glory to Arstozska\n", LINE_SIZE);
+				break;
+			default:
+				printf("Invalid option selected.\n");
+				break;
+		}
+		current = current->next;
+	}
+
+}
 
 //
 // FUNCTION : summarizeLines
@@ -127,3 +167,5 @@ void filterLines(Line** head) {
 //void summarizeLines(char* lines[], char* keywords[]) {
 //
 //}
+
+

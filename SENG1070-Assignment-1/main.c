@@ -17,6 +17,7 @@
 
 // FUNCTION PROTOTYPES
 void loadMenu(void);
+void help(void);
 char menuChoice(void);
 
 int main(void)
@@ -28,6 +29,8 @@ int main(void)
 	// Menu operations
 	char choice = NULL; // User choice for menu
 	bool running = true; // Flag to loop menu
+	char transformationChoice = NULL; // User choice for transformation rule
+	bool validTransform = false; // Flag to loop transformation rule
 
 
 	// Initialize a linked list of file lines
@@ -64,7 +67,36 @@ int main(void)
 
 		// [4] Transform lines
 		case '4':
-			printf("Call transformLines() here.\n");
+			// Prompt user for transformation rule
+			while (!validTransform) {
+				printf("Select transformation rule:\n");
+				printf("Uppercase (U or u)\n");
+				printf("Lowercase (L or l)\n");
+				printf("Reverse (R or r)\n");
+				transformationChoice = menuChoice();
+				switch (transformationChoice)
+				{
+				case 'u':
+				case 'U':
+				case 'l':
+				case 'L':
+				case 'r':
+				case 'R':
+				case '*':
+					validTransform = true;
+					break;
+				default:
+					printf("Invalid transformation rule. Please try again.\n");
+				}
+				transformLines(&head, transformationChoice);
+				printf("Transformed Lines:\n");
+				viewLines(head);
+
+			}
+			// Reset transformation values
+			validTransform = false;
+			transformationChoice = NULL;
+
 			break;
 
 		// [5] Summarize lines
@@ -76,6 +108,12 @@ int main(void)
 		case '6':
 			fpFile = loadFile("w");
 			saveFile(fpFile, &head);
+			break;
+
+		// [H] Help
+		case 'h':
+		case 'H':
+			help();
 			break;
 
 		// [0] Exit the program
@@ -110,17 +148,38 @@ int main(void)
 //		void	:	This function does not return a value.
 //
 void loadMenu(void) {
-	printf("-------------------------------\n");
+	printf("--------------------------------\n");
 	printf("File Processing Operations Menu:\n");
-	printf("-------------------------------\n");
+	printf("--------------------------------\n");
+	printf("[ 1 ] Load file\n");
+	printf("[ 2 ] View lines\n");
+	printf("[ 3 ] Filter lines\n");
+	printf("[ 4 ] Transform lines\n");
+	printf("[ 5 ] Summarize lines\n");
+	printf("[ 6 ] Save changes to file \n");
+	printf("[ H ] Help\n");
+	printf("[ 0 ] Exit program\n\n");
+}
 
-	printf("[1] Load file\n");
-	printf("[2] View lines\n");
-	printf("[3] Filter lines\n");
-	printf("[4] Transform lines\n");
-	printf("[5] Summarize lines\n");
-	printf("[6] Save changes to file \n");
-	printf("[0] Exit program\n\n");
+//
+// FUNCTION : help
+// DESCRIPTION :
+//		 This function prints a description of all of the functions to the console
+// PARAMETERS :
+//		 void	:	This function does not take any parameters.
+// RETURNS :
+//		void	:	This function does not return a value.
+//
+void help(void) {
+	printf("Help Documentation:\n");
+	printf("[ 1 ] Load file: This option data from a .txt file after you provide the name. If there is nothing in the file, then data will not be loaded. The maximum line size is 200 characters.\n\n");
+	printf("[ 2 ] View lines: This option displays the data loaded from the .txt file.\n\n");
+	printf("[ 3 ] Filter lines: This option allows you to enter two keywords to filter the lines of the file. If the keyword is present in the line, the line is deleted.\n\n");
+	printf("[ 4 ] Transform lines: This option allows you to transform each line of the file depending on a transformation rule: uppercase (u), lowercase (l), or reverse. (r).\n");
+	printf("Hey, since you actually opened the help documentation, here's a secret: there is an extra rule to transform lines. Enter '*' to change every line to 'Glory to Arstotzka.'.\n\n");
+	printf("[ 5 ] Summarize lines: This option allows you to enter a keyword and displays the total number of lines in the file, the frequency of the keyword you specified, and the average length of each line.\n\n");
+	printf("[ 6 ] Save changes to file: This option saves any filtered or transformed lines to a file. If you specify the name of a file that already exists, it will overwrite the data. \n\n");
+	printf("[ 0 ] Exit program: This option exits the program.\n\n");
 }
 
 // menuChoice() borrows some code from: 
@@ -157,7 +216,6 @@ char menuChoice(void) {
 			valid = true;
 		}
 	}
-
 	return charInput; // Return user character choice
 }
 

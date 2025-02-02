@@ -205,7 +205,7 @@ void viewLines(Line* head) {
 		printf("%s", current->line);
 		current = current->next;
 	}
-	printf("\n");
+	printf("\n\n");
 }
 
 //
