@@ -4,8 +4,8 @@
 * PROGRAMMER : Vanesa Robledo
 * FIRST VERSION : 2025-01-29
 * DESCRIPTION :
-* This program allows for file processing operations - filtering, transforming, summarizing
-* and saving the changes.
+* This program allows for file processing operations - filtering, transforming, summarizing -
+* and saving the changes to a file.
 * This is the main file containing the menu system to allow the user to load a file, transform
 * the file, and save the data to an output file, implemented using function pointers.
 */
@@ -16,6 +16,7 @@
 // FUNCTION PROTOTYPES
 void help(void);
 void secret(void);
+void kris(void);
 void exitProgram(Line**);
 
 // Functin Pointer Protoypes
@@ -33,7 +34,8 @@ int main(void)
 
 	Helper commands[] = {
 		{"help", help},
-		{"secret", secret}
+		{"secret", secret},
+		{"kris", kris}
 	};
 
 	// Dispatch table for file functions
@@ -63,6 +65,7 @@ int main(void)
 
 	// Define constants
 	const int knumCommands = sizeof(commands) / sizeof(commands[0]);
+	const int knumFileCommands = sizeof(dispatchFile) / sizeof(dispatchFile[0]);
 	const int knumProcessingCommands = sizeof(dispatchProcessing) / sizeof(dispatchProcessing[0]);
 
 	// INITIALIZE DATA
@@ -75,9 +78,10 @@ int main(void)
 	char menuChoice[INPUT_SIZE] = ""; // Store user menu choice
 	char mode[CHAR_SIZE] = "";  // Store file mode
 
-	printf("=======================================================\n");
-	printf("FILE PROCESSING PROGRAM by Vanesa Robledo\n");
-	printf("=======================================================\n");
+	printf("===================================================================\n");
+	printf("SENG1070 Assignment 1 - File Processing and Function Pointers in C\n");
+	printf("by Vanesa Robledo\n");
+	printf("===================================================================\n");
 	printf("Load a file by typing 'load'. View the data with 'view' and process the data with one of 'filter', 'transform', or 'summarize'. Exit the program with 'exit'. For more details, type 'help'.\n");
 
 	while (running) {
@@ -86,47 +90,55 @@ int main(void)
 		_strlwr(buffer); // Convert to lowercase for case insensitivity
 		if (sscanf(buffer, "%99s", &menuChoice) > 0) // Validate user input
 		{
+			// Reset value of valid command
 			found = false;
 
+			// Helper Commands
 			for (int i = 0; i < knumCommands; i++)
 			{
-				// Helper Commands
 				// If command is found, execute callback
 				if (strcmp(menuChoice, commands[i].command) == 0)
 				{
 					performHelp(commands[i].handler);
 					found = true;
 				}
-				// File Commands
-				else if (strcmp(menuChoice, dispatchFile[i].command) == 0)
+			}
+
+			// File Commands
+			for (int i = 0; i < knumFileCommands; i++)
+			{
+				if (strcmp(menuChoice, dispatchFile[i].command) == 0)
 				{
+					// Load file - pass "a+" as file opening mode
 					if (strcmp(menuChoice, "load") == 0) {
 						strncpy(mode, "a+", CHAR_SIZE);
 					}
+					// Save file - pass "w+" as file opening mode
 					else if (strcmp(menuChoice, "save") == 0) {
 
 						strncpy(mode, "w+", CHAR_SIZE);
 					}
-					performFile(fpFile, &head, mode, dispatchFile[0].handler);
+					// If command is found, execute callback
+					performFile(fpFile, &head, mode, dispatchFile[i].handler);
 					found = true;
 				}
 			}
 
 			// Processing Commands
-		//	for (int i = 0; i < knumCommands; i++)
-		//	{
-		//		// If command is found, execute callback
-		//		if (strcmp(menuChoice, commands[i].command) == 0)
-		//		{
-		//			performHelp(commands[i].handler);
-		//			found = true;
-		//		}
-		//	}
+			for (int i = 0; i < knumProcessingCommands; i++)
+			{
+				// If command is found, execute callback
+				if (strcmp(menuChoice, dispatchProcessing[i].command) == 0)
+				{
+					performProcessing(&head, dispatchProcessing[i].handler);
+					found = true;
+				}
+			}
 
-		}
-
-		if (!found) {
-			printf("Invalid menu option. Type 'help' for a list of commands.\n\n");
+			// Invalid Input
+			if (!found) {
+				printf("Invalid menu option. Type 'help' for a list of commands.\n\n");
+			}
 		}
 
 	}
@@ -147,8 +159,7 @@ void help(void) {
 	printf("File Processing Commands:\n");
 	printf("------------------------------------------------------\n");
 	printf("load:\t\tThis option data from a .txt file after you provide the name.\n\t\tIf there is nothing in the file, then data will not be loaded. The maximum line size is 200 characters.\n\n");
-	printf("save:\t\tThis option saves any filtered or transformed lines to a file.\n\t\tIIf you specify the name of a file that already exists, it will overwrite the data. \n\n");
-	printf("\n");
+	printf("save:\t\tThis option saves any filtered or transformed lines to a file.\n\t\tIf you specify the name of a file that already exists, it will overwrite the data. \n\n");
 	printf("------------------------------------------------------\n");
 	printf("File Commands:\n");
 	printf("------------------------------------------------------\n");
@@ -156,21 +167,37 @@ void help(void) {
 	printf("filter:\t\tThis option allows you to enter two keywords to filter the lines of the file.\n\t\tIf one of the keywords is present in the line, the line is deleted.\n\n");
 	printf("transform:\tThis option allows you to transform each line of the file depending on a transformation rule:\n\t\tuppercase (u/U), lowercase (l/L), or reverse. (r/R).\n\n");
 	printf("summarize:\tThis option allows you to enter a keyword and displays the total number of lines in the file,\n\t\tthe frequency of the keyword you specified, and the average length of each line.\n\n");
+	printf("\nsecret:\t\tShows secret commands.\n\n");
 	printf("exit:\t\tThis option exits the program.\n\n");
 }
 
 //
 // FUNCTION : secret
 // DESCRIPTION :
-//		 This function prints a secret.
+//		 This function prints a secret command to the screen.
 // PARAMETERS :
 //		 void	:	This function does not take any parameters.
 // RETURNS :
 //		void	:	This function does not return a value.
 //
 void secret(void) {
-	printf("secret:\t\tThere is an extra rule to transform lines.\n\t\tEnter '*' to change every line to 'Glory to Arstotzka.'.\n\n");
+	printf("\tThere is an extra rule to transform lines: Enter '*' to change every line to 'Glory to Arstotzka.'\n");
+	printf("\tEnter 'kris' in the menu for a secret message.\n");
 }
+
+//
+// FUNCTION : kris
+// DESCRIPTION :
+//		 This function prints a secret message to the screen.
+// PARAMETERS :
+//		 void	:	This function does not take any parameters.
+// RETURNS :
+//		void	:	This function does not return a value.
+//
+void kris(void) {
+	printf("Kris Get the Banana.\n\n");
+}
+
 
 //
 // FUNCTION : exitProgram

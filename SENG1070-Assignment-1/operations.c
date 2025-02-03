@@ -4,7 +4,8 @@
 * PROGRAMMER : Vanesa Robledo
 * FIRST VERSION : 2025-01-29
 * DESCRIPTION :
-* 
+* This program allows for file processing operations - filtering, transforming, summarizing -
+* and saving the changes to a file.
 * This file contains the file processing functions.
 */
 
@@ -13,7 +14,6 @@
 #ifdef _MSC_VER
 #define _CRT_SECURE_NO_WARNINGS	1
 #endif
-
 
 //
 // FUNCTION : filterLines
@@ -104,6 +104,13 @@ void filterLines(Line** head) {
 		}
 	}
 
+	printf("\n------------------------------------------------------\n");
+	printf("Filtered Lines (Keywords: '%s' and '%s'):\n", keywords[0], keywords[1]);
+	printf("------------------------------------------------------\n");
+
+	viewLines(head);
+
+	return;
 }
 
 
@@ -184,6 +191,33 @@ void transformLines(Line** head) {
 		current = current->next;
 	}
 
+	printf("\n------------------------------------------------------\n");
+	printf("Transformed Lines: ");
+	switch (transformationChoice)
+	{
+	case 'u':
+	case 'U':
+		printf("Uppercase\n");
+		break;
+	case 'r':
+	case 'R':
+		printf("Reverse\n");
+		break;
+	case 'l':
+	case 'L':
+		printf("Lowercase\n");
+		break;
+	case '*':
+		printf("Glory to Arstozska\n");
+		break;
+	default:
+		printf("");
+	}
+	printf("------------------------------------------------------\n");
+
+	viewLines(head);
+
+	return;
 }
 
 //

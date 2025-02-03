@@ -4,7 +4,8 @@
 * PROGRAMMER : Vanesa Robledo
 * FIRST VERSION : 2025-01-29
 * DESCRIPTION :
-* 
+* This program allows for file processing operations - filtering, transforming, summarizing -
+* and saving the changes to a file.
 * This file contains functions to process the input and output files.
 */
 
@@ -17,9 +18,11 @@
 //			This function asks a user for the name of a file and loads it (or creates it if it doesn't exist)
 //			and returns the file pointer
 // PARAMETERS :
+//			FILE* file	:	File pointer
+//			Line** head	:	Pointer to head of linked list
 //			char mode[]	:	Mode to open file
 // RETURNS :
-//			int*		:	Pointer to a file		
+//			void		:	This function does not return a value	
 //
 void loadFile(FILE* file, Line** head, char mode[]) {
 	char filename[INPUT_SIZE] = ""; // Name of file
@@ -57,9 +60,7 @@ void loadFile(FILE* file, Line** head, char mode[]) {
 		// Successfully load the file
 		printf("%s loaded.\n", filename);
 		*head = storeFileData(file);
-		return file;
 	}
-
 }
 
 //
@@ -67,7 +68,7 @@ void loadFile(FILE* file, Line** head, char mode[]) {
 // DESCRIPTION :
 //			This function takes a file pointer and saves each lline to a linked list of Lines
 // PARAMETERS :
-//		int* file	:	Pointer to file
+//		Line* file	:	Pointer to head of linked list where data is stored
 // RETURNS :
 //		Line*		:	Pointer to a linked list of Lines
 //
@@ -215,27 +216,61 @@ void viewLines(Line** head) {
 // DESCRIPTION :
 //			This function saves any changes to file
 // PARAMETERS :
-//		FILE* file	:	Pointer to file
-//		Line** head	:	Pointer to head of linked list of Lines
+//			FILE* file	:	File pointer
+//			Line** head	:	Pointer to head of linked list
+//			char mode[]	:	Mode to open file
 // RETURNS :
-//			int		:	Return code if file was saved properly
+//			void		:	This function does not return a value	
 //
 void saveFile(FILE* file, Line** head, char mode[]) {
 	// If list is empty, do not write new data
 	if (*head == NULL) {
-		printf("No data to write to file.\n");
+		printf("No data to write to file.\n\n");
 		return;
 	}
 	else
 	{
-		// Iterate through linked list and write each line
-		Line* current = *head;
-		while (current != NULL) {
-			// Ensure line isn't empty
-			if (strlen(current->line) != 0) {
-				// Write to file
-				if (fprintf(file, "%s", current->line) > 0) {
-					current = current->next;
+		char filename[INPUT_SIZE] = ""; // Name of file
+		char ext[] = ".txt"; // File extension
+		char buffer[INPUT_SIZE] = ""; // Buffer for user input
+
+		// Flag for valid input
+		bool validFileName = false;
+
+		while (!validFileName)
+		{
+			// Prompt user for file name
+			printf("Enter name of file (before .txt): ");
+			fgets(buffer, INPUT_SIZE, stdin);
+
+			// Validate input
+			if (sscanf(buffer, "%s", &filename) == 0) {
+				printf("Invalid input. Please try again.\n");
+			}
+			else {
+				// Concatenate file extension and file name
+				strcat(filename, ext);
+				validFileName = true;
+			}
+		}
+
+		// Open file for reading and writing, or creates the file if it doesn't exist
+		file = fopen(filename, mode);
+		if (file == NULL) {
+			// Exit if there is a failure to open file
+			printf("Error opening file. Exiting program...\n");
+			exit(EXIT_FAILURE);
+		}
+		else {
+			// Iterate through linked list and write each line
+			Line* current = *head;
+			while (current != NULL) {
+				// Ensure line isn't empty
+				if (strlen(current->line) != 0) {
+					// Write to file
+					if (fprintf(file, "%s", current->line) > 0) {
+						current = current->next;
+					}
 				}
 			}
 		}
@@ -245,4 +280,5 @@ void saveFile(FILE* file, Line** head, char mode[]) {
 		printf("Error closing file.\n");
 		return;
 	}
+	printf("Data saved to file successfully.\n\n");
 }
