@@ -22,7 +22,7 @@ void exitProgram(Line**);
 // Functin Pointer Protoypes
 void performHelp(void (*callback)());
 void performFile(FILE*, Line**, char[], void (*callback)(FILE*, Line**, char[]));
-void performProcessing(Line**, void (*callback)(Line**));
+void performProcessing(Line*, void (*callback)(Line**));
 
 int main(void)
 {
@@ -82,7 +82,7 @@ int main(void)
 	printf("SENG1070 Assignment 1 - File Processing and Function Pointers in C\n");
 	printf("by Vanesa Robledo\n");
 	printf("===================================================================\n");
-	printf("Load a file by typing 'load'. View the data with 'view' and process the data with one of 'filter', 'transform', or 'summarize'. Exit the program with 'exit'. For more details, type 'help'.\n");
+	printf("Load a file by typing 'load'. View the data with 'view' and process the data with one of 'filter', 'transform', or 'summarize'. Save changes to file with 'save'. Exit the program with 'exit'. For more details, type 'help'.\n");
 
 	while (running) {
 		printf("> ");
@@ -130,7 +130,17 @@ int main(void)
 				// If command is found, execute callback
 				if (strcmp(menuChoice, dispatchProcessing[i].command) == 0)
 				{
-					performProcessing(&head, dispatchProcessing[i].handler);
+					// Exit program
+					if (strcmp(menuChoice, "exit") == 0) {
+						performProcessing(head, dispatchProcessing[i].handler);
+					}
+					// Check if linked list is empty
+					else if (head == NULL) {
+						printf("No data loaded. Type 'load' to load data from .txt file.\n\n");
+					}
+					else {
+						performProcessing(head, dispatchProcessing[i].handler);
+					}
 					found = true;
 				}
 			}
@@ -182,7 +192,7 @@ void help(void) {
 //
 void secret(void) {
 	printf("\tThere is an extra rule to transform lines: Enter '*' to change every line to 'Glory to Arstotzka.'\n");
-	printf("\tEnter 'kris' in the menu for a secret message.\n");
+	printf("\tEnter 'kris' in the menu for a secret message.\n\n");
 }
 
 //
@@ -195,9 +205,8 @@ void secret(void) {
 //		void	:	This function does not return a value.
 //
 void kris(void) {
-	printf("Kris Get the Banana.\n\n");
+	printf("Kris Get The Banana.\n\n");
 }
-
 
 //
 // FUNCTION : exitProgram
@@ -283,7 +292,7 @@ void performFile(FILE* file, Line** head, char mode[], void (*callback)(FILE*, L
 //
 void performProcessing(Line** head, void (*callback)(Line**)) {
 	if (callback != NULL) {
-		callback(head);
+		callback(&head);
 	}
 	else {
 		printf("Invalid command. Please try again.\n");

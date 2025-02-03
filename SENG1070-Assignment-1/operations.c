@@ -182,7 +182,7 @@ void transformLines(Line** head) {
 				break;
 			// Secret transformation
 			case '*':
-				strncpy(current->line, "Glory to Arstozska\n", LINE_SIZE);
+				strncpy(current->line, "Glory to Arstotzka\n", LINE_SIZE);
 				break;
 			default:
 				printf("Invalid option selected.\n");
@@ -208,7 +208,7 @@ void transformLines(Line** head) {
 		printf("Lowercase\n");
 		break;
 	case '*':
-		printf("Glory to Arstozska\n");
+		printf("Glory to Arstotzka\n");
 		break;
 	default:
 		printf("");
