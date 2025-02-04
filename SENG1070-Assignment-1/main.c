@@ -21,7 +21,7 @@ void exitProgram(Line**);
 
 // Functin Pointer Protoypes
 void performHelp(void (*callback)());
-void performFile(FILE*, Line**, char[], void (*callback)(FILE*, Line**, char[]));
+void performFile(FILE**, Line**, char[], void (*callback)(FILE**, Line**, char[]));
 void performProcessing(Line**, void (*callback)(Line**));
 
 int main(void)
@@ -272,9 +272,9 @@ void performProcess(void (*callback)()) {
 // RETURNS :
 //			void	:	This function does not return a value
 //
-void performFile(FILE* file, Line** head, char mode[], void (*callback)(FILE*, Line**, char[])) {
+void performFile(FILE** file, Line** head, char mode[], void (*callback)(FILE**, Line**, char[])) {
 	if (callback != NULL) {
-		callback(file, head, mode);
+		callback(&file, head, mode);
 	}
 	else {
 		printf("Invalid command. Please try again.\n");

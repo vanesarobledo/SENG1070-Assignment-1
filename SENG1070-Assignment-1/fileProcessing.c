@@ -24,7 +24,7 @@
 // RETURNS :
 //			void		:	This function does not return a value	
 //
-void loadFile(FILE* file, Line** head, char mode[]) {
+void loadFile(FILE** file, Line** head, char mode[]) {
 	char filename[INPUT_SIZE] = ""; // Name of file
 	char ext[] = ".txt"; // File extension
 	char buffer[INPUT_SIZE] = ""; // Buffer for user input
@@ -50,8 +50,8 @@ void loadFile(FILE* file, Line** head, char mode[]) {
 	}
 
 	// Open file for reading and writing, or creates the file if it doesn't exist
-	file = fopen(filename, mode);
-	if (file == NULL) {
+	*file = fopen(filename, mode);
+	if (*file == NULL) {
 		// Exit if there is a failure to open file
 		printf("Error opening file. Exiting program...\n");
 		exit(EXIT_FAILURE);
@@ -59,7 +59,7 @@ void loadFile(FILE* file, Line** head, char mode[]) {
 	else {
 		// Successfully load the file
 		printf("%s loaded.\n", filename);
-		*head = storeFileData(file);
+		*head = storeFileData(*file);
 	}
 }
 
@@ -222,9 +222,9 @@ void viewLines(Line** head) {
 // RETURNS :
 //			void		:	This function does not return a value	
 //
-void saveFile(FILE* file, Line** head, char mode[]) {
+void saveFile(FILE** file, Line** head, char mode[]) {
 	// If list is empty, do not write new data
-	if (*head == NULL) {
+	if (head == NULL) {
 		printf("No data to write to file.\n\n");
 		return;
 	}
