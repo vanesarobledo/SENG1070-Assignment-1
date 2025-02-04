@@ -22,7 +22,7 @@ void exitProgram(Line**);
 // Functin Pointer Protoypes
 void performHelp(void (*callback)());
 void performFile(FILE*, Line**, char[], void (*callback)(FILE*, Line**, char[]));
-void performProcessing(Line*, void (*callback)(Line**));
+void performProcessing(Line**, void (*callback)(Line**));
 
 int main(void)
 {
