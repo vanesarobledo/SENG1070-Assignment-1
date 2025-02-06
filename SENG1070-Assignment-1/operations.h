@@ -10,8 +10,8 @@
 #include "fileProcessing.h"
 
 // FUNCTION PROTOTYPES
-void filterLines(Line**);
-void transformLines(Line**);
-void summarizeLines(Line**);
-void viewLines(Line**);
+Line* filterLines(Line**);
+Line* transformLines(Line**);
+Line* summarizeLines(Line**);
+Line* viewLines(Line**);
 char menuChoice(void);

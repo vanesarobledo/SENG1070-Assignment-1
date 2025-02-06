@@ -22,7 +22,7 @@ void exitProgram(Line**);
 // Functin Pointer Protoypes
 void performHelp(void (*callback)());
 void performFile(FILE**, Line**, char[], void (*callback)(FILE**, Line**, char[]));
-void performProcessing(Line**, void (*callback)(Line**));
+Line* performProcessing(Line**, void (*callback)(Line**));
 
 int main(void)
 {
@@ -52,7 +52,7 @@ int main(void)
 	// Dispatch table for processing functions
 	typedef struct {
 		const char* command;
-		void (*handler)(Line**);
+		Line* (*handler)(Line**);
 	} Processsing;
 
 	Processsing dispatchProcessing[] = {
@@ -101,22 +101,22 @@ int main(void)
 			// if you directly invoke the function itself.
 
 			// This breaks
-			if (strcmp(menuChoice, "g") == 0) {
+			if (strcmp(menuChoice, "b") == 0) {
 				loadFile(&fpFile, &head, "a+");
-				performProcessing(head, dispatchProcessing[1].handler);
+				head = performProcessing(head, dispatchProcessing[1].handler);
 				printf("*head: %p\n", head);
-				printf("**head: %p\n", &head);/*
-				performProcessing(head, dispatchProcessing[0].handler);*/
+				printf("**head: %p\n", &head);
+				head = performProcessing(head, dispatchProcessing[0].handler);
 				found = true;
 			}
 
 			// This works
-			if (strcmp(menuChoice, "b") == 0) {
+			if (strcmp(menuChoice, "g") == 0) {
 				loadFile(&fpFile, &head, "a+");
-				filterLines(&head);
+				head = filterLines(&head);
 				printf("*head: %p\n", head);
 				printf("**head: %p\n", &head);
-				viewLines(&head);
+				head = viewLines(&head);
 				found = true;
 			}
 			// TESTING COMMANDS - DELETE LATER //
@@ -160,7 +160,7 @@ int main(void)
 				{
 					// Exit program
 					if (strcmp(menuChoice, "exit") == 0) {
-						performProcessing(head, dispatchProcessing[i].handler);
+						head = performProcessing(head, dispatchProcessing[i].handler);
 					}
 					// Check if linked list is empty
 					else if (head == NULL) {
@@ -168,7 +168,7 @@ int main(void)
 					}
 					// Perform processing function
 					else {
-						performProcessing(head, dispatchProcessing[i].handler);
+						head = performProcessing(head, dispatchProcessing[i].handler);
 					}
 					found = true;
 				}
@@ -321,9 +321,14 @@ void performFile(FILE** file, Line** head, char mode[], void (*callback)(FILE**,
 // RETURNS :
 //		void	:	This function does not return a value
 //
-void performProcessing(Line** head, void (*callback)(Line**)) {
+Line* performProcessing(Line** head, Line* (*callback)(Line**)) {
 	if (callback != NULL) {
-		callback(&head);
+		if (head != NULL) {
+			return callback(&head);
+		}
+		else {
+			return callback(head);
+		}
 		printf("Head pointer is now: %p\n", head);
 	}
 	else {

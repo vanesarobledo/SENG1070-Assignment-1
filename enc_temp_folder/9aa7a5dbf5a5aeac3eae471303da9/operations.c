@@ -132,12 +132,12 @@ Line* filterLines(Line** head) {
 				}
 			}
 			// Check tail node and free tail node memory
-			else if (current->next == NULL) {
-				if (strstr(current->next->line, keywords[0]) != NULL || strstr(current->next->line, keywords[1]) != NULL)
-				{
-					free(current);
-				}
-			}
+			//else if (current->next == NULL) {
+			//	if (strstr(current->next->line, keywords[0]) != NULL || strstr(current->next->line, keywords[1]) != NULL)
+			//	{
+			//		free(current);
+			//	}
+			//}
 			else {
 				// Iterate through linked list
 				current = next;
