@@ -93,34 +93,6 @@ int main(void)
 			// Reset value of valid command
 			found = false;
 
-			// TESTING COMMANDS - DELETE LATER //
-
-			// BUG: If you load an input file, filter by keywords to remove every line, and then try to do any processing
-			// function again, the program crashes.
-			// However, this only happens when the functions are called with function pointers. This works perfectly
-			// if you directly invoke the function itself.
-
-			// This breaks
-			if (strcmp(menuChoice, "b") == 0) {
-				loadFile(&fpFile, &head, "a+");
-				head = performProcessing(head, dispatchProcessing[1].handler);
-				printf("*head: %p\n", head);
-				printf("**head: %p\n", &head);
-				head = performProcessing(head, dispatchProcessing[0].handler);
-				found = true;
-			}
-
-			// This works
-			if (strcmp(menuChoice, "g") == 0) {
-				loadFile(&fpFile, &head, "a+");
-				head = filterLines(&head);
-				printf("*head: %p\n", head);
-				printf("**head: %p\n", &head);
-				head = viewLines(&head);
-				found = true;
-			}
-			// TESTING COMMANDS - DELETE LATER //
-
 			// Helper Commands
 			for (int i = 0; i < knumCommands; i++)
 			{

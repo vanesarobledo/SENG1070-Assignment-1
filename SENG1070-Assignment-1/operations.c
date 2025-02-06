@@ -95,13 +95,14 @@ Line* filterLines(Line** head) {
 	while (current != NULL) {
 		// Check head node first
 		if (*head == current) {
-			// If head and tail node are not the same, store next
+			// Check if head = tail
 			if (current->next != NULL) {
 				next = current->next;
 			}
-			else { // If head and tail node are the same, keep next as NULL
+			else {
 				next = NULL;
 			}
+
 			// If head contains keyword, delete head and set new head
 			if (strstr(current->line, keywords[0]) != NULL || strstr(current->line, keywords[1]) != NULL) {
 				*head = next;
@@ -109,14 +110,13 @@ Line* filterLines(Line** head) {
 			}
 			current = next;
 		}
-
 		// If next node contains keyword, change pointer of current node to point to next's next
 		else if (current->next != NULL) {
+			// Store pointer of next node
+			next = current->next->next;
+
 			if (strstr(current->next->line, keywords[0]) != NULL || strstr(current->next->line, keywords[1]) != NULL)
 			{
-				// Store pointer of next node
-				next = current->next->next;
-
 				// Delete node of linked list
 				free(current->next);
 
@@ -128,21 +128,17 @@ Line* filterLines(Line** head) {
 				else
 				{
 					// If the node is the tail, set pointer of penultimate node to null to be new tail
-					current->next = NULL;
-				}
-			}
-			// Check tail node and free tail node memory
-			else if (current->next == NULL) {
-				if (strstr(current->next->line, keywords[0]) != NULL || strstr(current->next->line, keywords[1]) != NULL)
-				{
-					free(current);
+					current->next = ptrNull;
 				}
 			}
 			else {
 				// Iterate through linked list
 				current = next;
 			}
-			current = next;
+		}
+		// If at tail node, and there are no keywords, stop iterating
+		else if (current->next == NULL) {
+			current = NULL;
 		}
 		// If node does not contain either keyword, move pointer to iterate list
 		else {
@@ -157,7 +153,7 @@ Line* filterLines(Line** head) {
 
 		head = viewLines(head);
 
-		return *head;
+		return head;
 	}
 	// All lines were filtered
 	else {
