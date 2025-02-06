@@ -22,7 +22,7 @@ void exitProgram(Line**);
 // Functin Pointer Protoypes
 void performHelp(void (*callback)());
 void performFile(FILE**, Line**, char[], void (*callback)(FILE**, Line**, char[]));
-Line* performProcessing(Line**, void (*callback)(Line**));
+Line* performProcessing(Line**, Line* (*callback)(Line**));
 
 int main(void)
 {
@@ -41,7 +41,7 @@ int main(void)
 	// Dispatch table for file functions
 	typedef struct {
 		const char* command;
-		void (*handler)(FILE*, Line**, char[]);
+		void (*handler)(FILE**, Line**, char[]);
 	} FileFunction;
 
 	FileFunction dispatchFile[] = {
