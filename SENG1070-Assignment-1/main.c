@@ -93,6 +93,34 @@ int main(void)
 			// Reset value of valid command
 			found = false;
 
+			// TESTING COMMANDS - DELETE LATER //
+
+			// BUG: If you load an input file, filter by keywords to remove every line, and then try to do any processing
+			// function again, the program crashes.
+			// However, this only happens when the functions are called with function pointers. This works perfectly
+			// if you directly invoke the function itself.
+
+			// This breaks
+			if (strcmp(menuChoice, "g") == 0) {
+				loadFile(&fpFile, &head, "a+");
+				performProcessing(head, dispatchProcessing[1].handler);
+				printf("*head: %p\n", head);
+				printf("**head: %p\n", &head);/*
+				performProcessing(head, dispatchProcessing[0].handler);*/
+				found = true;
+			}
+
+			// This works
+			if (strcmp(menuChoice, "b") == 0) {
+				loadFile(&fpFile, &head, "a+");
+				filterLines(&head);
+				printf("*head: %p\n", head);
+				printf("**head: %p\n", &head);
+				viewLines(&head);
+				found = true;
+			}
+			// TESTING COMMANDS - DELETE LATER //
+
 			// Helper Commands
 			for (int i = 0; i < knumCommands; i++)
 			{
@@ -138,6 +166,7 @@ int main(void)
 					else if (head == NULL) {
 						printf("No data loaded. Type 'load' to load data from .txt file.\n\n");
 					}
+					// Perform processing function
 					else {
 						performProcessing(head, dispatchProcessing[i].handler);
 					}
@@ -218,9 +247,11 @@ void kris(void) {
 //		void			:	This function does not return a value
 //
 void exitProgram(Line** head) {
-	// Free dynamically-allocated memory
-	free(*head);
-
+	// Check if there is a linked list
+	if (head != NULL) {
+		// Free dynamically-allocated memory
+		free(*head);
+	}
 	printf("Exiting program...\n");
 	exit(EXIT_SUCCESS);
 }
@@ -293,6 +324,7 @@ void performFile(FILE** file, Line** head, char mode[], void (*callback)(FILE**,
 void performProcessing(Line** head, void (*callback)(Line**)) {
 	if (callback != NULL) {
 		callback(&head);
+		printf("Head pointer is now: %p\n", head);
 	}
 	else {
 		printf("Invalid command. Please try again.\n");

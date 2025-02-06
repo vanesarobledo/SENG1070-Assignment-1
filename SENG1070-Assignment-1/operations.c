@@ -16,6 +16,32 @@
 #endif
 
 //
+// FUNCTION : viewLines
+// DESCRIPTION :
+//			Views all the nodes of the linked list of Lines
+// PARAMETERS :
+//		Line** head		:	Pointer to head of linked list
+// RETURNS :
+//		void			:	This function does not return a value
+//
+void viewLines(Line** head) {
+	// Check if linked list is empty
+	if (*head == NULL) {
+		printf("No data loaded. Type 'load' to load data from .txt file.\n\n");
+		return;
+	}
+
+	Line* current = *head;
+	while (current != NULL) {
+		printf("%s", current->line);
+		current = current->next;
+	}
+
+	printf("\n\n");
+}
+
+
+//
 // FUNCTION : filterLines
 // DESCRIPTION :
 //			This function filters a given list of lines by specified keywords
@@ -26,11 +52,14 @@
 //
 void filterLines(Line** head) {
 	// If linked list is empty, do not check for keywords to filter
-	if (head == NULL) {
+	if (*head == NULL) {
 		printf("No data loaded to filter.\n");
 		return;
 	}
 
+	// Get keywords from user
+	// Note: Returning strings in C is a pain, even moreso an array of stringgs
+	// For modularity, this should be its own function
 	char buffer[INPUT_SIZE] = ""; // Buffer to store user input
 	char keyword[INPUT_SIZE] = ""; // Store keyword temporarily
 	bool valid = false; // Flag to loop until valid input
@@ -57,6 +86,9 @@ void filterLines(Line** head) {
 	Line* current = *head;
 	Line* next = NULL;
 
+	int lineCount = 0; // Keep track of the total number of lines
+	int deletedLines = 0; // Keep track of the number of deleted lines
+
 	while (current != NULL) {
 		// Check head node first
 		if (*head == current) {
@@ -68,6 +100,7 @@ void filterLines(Line** head) {
 			}
 			current = next;
 		}
+
 		// If next node contains keyword, change pointer of current node to point to next's next
 		else if (current->next != NULL) {
 			if (strstr(current->next->line, keywords[0]) != NULL || strstr(current->next->line, keywords[1]) != NULL)
@@ -85,8 +118,16 @@ void filterLines(Line** head) {
 				}
 				else
 				{
+
 					// If the node is the tail, set pointer of penultimate node to null to be new tail
 					current->next = NULL;
+				}
+			}
+			// Check tail node and free tail node memory
+			else if (current->next == NULL) {
+				if (strstr(current->next->line, keywords[0]) != NULL || strstr(current->next->line, keywords[1]) != NULL)
+				{
+					free(current);
 				}
 			}
 			else {
@@ -94,23 +135,24 @@ void filterLines(Line** head) {
 				current = next;
 			}
 		}
-		// If at tail node, and there are no keywords, stop iterating
-		else if (current->next == NULL) {
-			current = NULL;
-		}
 		// If node does not contain either keyword, move pointer to iterate list
 		else {
 			current = next;
 		}
 	}
 
-	printf("\n------------------------------------------------------\n");
-	printf("Filtered Lines (Keywords: '%s' and '%s'):\n", keywords[0], keywords[1]);
-	printf("------------------------------------------------------\n");
+	if (*head != NULL) {
+		printf("\n------------------------------------------------------\n");
+		printf("Filtered Lines (Keywords: '%s' and '%s'):\n", keywords[0], keywords[1]);
+		printf("------------------------------------------------------\n");
 
-	viewLines(head);
-
-	return;
+		viewLines(head);
+	}
+	// All lines were filtered
+	else {
+		head = NULL;
+		printf("All lines containing keywords: '%s' and '%s' were filtered.\n\n", keywords[0], keywords[1]);
+	}
 }
 
 
@@ -127,7 +169,7 @@ void filterLines(Line** head) {
 //
 void transformLines(Line** head) {
 	// If linked list is empty, do not transform lines
-	if (*head == NULL) {
+	if (head == NULL) {
 		printf("No data loaded to transform.\n");
 		return;
 	}
@@ -232,7 +274,7 @@ void transformLines(Line** head) {
 //
 void summarizeLines(Line** head) {
 	// If linked list is empty, do not summarize lines
-	if (*head == NULL) {
+	if (head == NULL) {
 		printf("No data loaded to summarize.\n");
 		return;
 	}

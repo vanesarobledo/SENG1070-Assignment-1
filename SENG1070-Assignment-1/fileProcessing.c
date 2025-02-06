@@ -37,7 +37,7 @@ void loadFile(FILE** file, Line** head, char mode[]) {
 		// Prompt user for file name
 		printf("Enter name of file (before .txt): ");
 		fgets(buffer, INPUT_SIZE, stdin);
-
+		
 		// Validate input
 		if (sscanf(buffer, "%s", &filename) == 0) {
 			printf("Invalid input. Please try again.\n");
@@ -191,24 +191,6 @@ void freeList(Line** head) {
 		current = next;
 	}
 	*head = NULL;
-}
-
-//
-// FUNCTION : viewLines
-// DESCRIPTION :
-//			Views all the nodes of the linked list of Lines
-// PARAMETERS :
-//		Line** head		:	Pointer to head of linked list
-// RETURNS :
-//		void			:	This function does not return a value
-//
-void viewLines(Line** head) {
-	Line* current = *head;
-	while (current != NULL) {
-		printf("%s", current->line);
-		current = current->next;
-	}
-	printf("\n\n");
 }
 
 //

@@ -37,4 +37,3 @@ Line* storeFileData(FILE*);
 Line* createNode(char[]);
 int insertNode(Line**, Line*);
 void freeList(Line**);
-void viewLines(Line**);

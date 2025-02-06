@@ -13,4 +13,5 @@
 void filterLines(Line**);
 void transformLines(Line**);
 void summarizeLines(Line**);
+void viewLines(Line**);
 char menuChoice(void);
