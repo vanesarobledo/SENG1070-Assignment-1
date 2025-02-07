@@ -84,7 +84,7 @@ int main(void)
 	printf("SENG1070 Assignment 1 - File Processing and Function Pointers in C\n");
 	printf("by Vanesa Robledo\n");
 	printf("===================================================================\n");
-	printf("Load a file by typing 'load' and view the data with 'view'.\nProcess the data with one of 'filter', 'transform', or 'summarize'.\nSave changes to file with 'save'.\nExit the program with 'exit'.\nView testing-related commands with 'test'. For more details, enter 'help'.\n");
+	printf("Load a file by typing 'load'.\nView the data with 'view'.\nProcess the data with one of 'filter', 'transform', or 'summarize'.\nSave changes to file with 'save'.\nView testing-related commands with 'test'.\nExit the program with 'exit'.\nFor more details, enter 'help'.\n");
 
 	while (running) {
 		printf("> ");

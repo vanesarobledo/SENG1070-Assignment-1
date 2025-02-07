@@ -25,7 +25,7 @@
 //			Line*
 //
 Line* viewLines(Line** head) {
-	int* ptrNull = NULL; // Null pointer
+	Line* ptrNull = NULL; // Null pointer
 
 	// Check if linked list is empty
 	if (head == NULL) {
@@ -55,7 +55,7 @@ Line* viewLines(Line** head) {
 //			Line*
 //
 Line* filterLines(Line** head) {
-	int* ptrNull = NULL; // Null pointer to return 
+	Line* ptrNull = NULL; // Null pointer to return 
 
 	// If linked list is empty, do not check for keywords to filter
 	if (head == NULL) {
@@ -300,7 +300,7 @@ Line* filterLines(Line** head) {
 //			Line*
 //
 Line* transformLines(Line** head) {
-	int* ptrNull = NULL; // Null pointer to return 
+	Line* ptrNull = NULL; // Null pointer to return 
 
 	// If linked list is empty, do not transform lines
 	if (head == NULL) {
@@ -407,7 +407,7 @@ Line* transformLines(Line** head) {
 //			Line*
 //
 Line* summarizeLines(Line** head) {
-	int* ptrNull = NULL;
+	Line* ptrNull = NULL; // Null pointer
 	// If linked list is empty, do not summarize lines
 	if (head == NULL) {
 		printf("No data loaded to summarize.\n");
