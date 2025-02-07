@@ -18,7 +18,7 @@
 //			This function asks a user for the name of a file and loads it (or creates it if it doesn't exist)
 //			and returns the file pointer
 // PARAMETERS :
-//			FILE* file	:	File pointer
+//			FILE** file	:	Pointer to file pointer
 //			Line** head	:	Pointer to head of linked list
 //			char mode[]	:	Mode to open file
 // RETURNS :
@@ -50,8 +50,8 @@ void loadFile(FILE** file, Line** head, char mode[]) {
 	}
 
 	// Open file for reading and writing, or creates the file if it doesn't exist
-	*file = fopen(filename, mode);
-	if (*file == NULL) {
+	file = fopen(filename, mode);
+	if (file == NULL) {
 		// Exit if there is a failure to open file
 		printf("Error opening file. Exiting program...\n");
 		exit(EXIT_FAILURE);
@@ -59,7 +59,7 @@ void loadFile(FILE** file, Line** head, char mode[]) {
 	else {
 		// Successfully load the file
 		printf("%s loaded.\n", filename);
-		*head = storeFileData(*file);
+		*head = storeFileData(file);
 	}
 }
 
@@ -198,7 +198,7 @@ void freeList(Line** head) {
 // DESCRIPTION :
 //			This function saves any changes to file
 // PARAMETERS :
-//			FILE* file	:	File pointer
+//			FILE** file	:	Pointer to file pointer
 //			Line** head	:	Pointer to head of linked list
 //			char mode[]	:	Mode to open file
 // RETURNS :

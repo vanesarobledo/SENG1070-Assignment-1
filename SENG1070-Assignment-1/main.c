@@ -84,13 +84,13 @@ int main(void)
 	printf("SENG1070 Assignment 1 - File Processing and Function Pointers in C\n");
 	printf("by Vanesa Robledo\n");
 	printf("===================================================================\n");
-	printf("Load a file by typing 'load' and view the data with 'view'.\nProcess the data with one of 'filter', 'transform', or 'summarize'.\nSave changes to file with 'save'.\nExit the program with 'exit'.\nTo view testing-related commands, enter 'test'. For more details, type 'help'.\n");
+	printf("Load a file by typing 'load' and view the data with 'view'.\nProcess the data with one of 'filter', 'transform', or 'summarize'.\nSave changes to file with 'save'.\nExit the program with 'exit'.\nView testing-related commands with 'test'. For more details, enter 'help'.\n");
 
 	while (running) {
 		printf("> ");
 		fgets(buffer, INPUT_SIZE, stdin); // Get user input
 		_strlwr(buffer); // Convert to lowercase for case insensitivity
-		if (sscanf(buffer, "%99s", &menuChoice) > 0) // Validate user input
+		if (sscanf(buffer, "%s", &menuChoice) > 0) // Validate user input
 		{
 			// Reset value of valid command
 			found = false;
@@ -173,7 +173,7 @@ int main(void)
 				{
 					// Exit program
 					if (strcmp(menuChoice, "exit") == 0) {
-						head = performProcessing(head, dispatchProcessing[i].handler);
+						head = performProcessing(&head, dispatchProcessing[i].handler);
 					}
 					// Check if linked list is empty
 					else if (head == NULL) {
@@ -181,7 +181,7 @@ int main(void)
 					}
 					// Perform processing function
 					else {
-						head = performProcessing(head, dispatchProcessing[i].handler);
+						head = performProcessing(&head, dispatchProcessing[i].handler);
 					}
 					found = true;
 				}
@@ -334,7 +334,7 @@ void performProcess(void (*callback)()) {
 //
 void performFile(FILE** file, Line** head, char mode[], void (*callback)(FILE**, Line**, char[])) {
 	if (callback != NULL) {
-		callback(&file, head, mode);
+		callback(file, head, mode);
 	}
 	else {
 		printf("Invalid command. Please try again.\n");
@@ -352,13 +352,7 @@ void performFile(FILE** file, Line** head, char mode[], void (*callback)(FILE**,
 //
 Line* performProcessing(Line** head, Line* (*callback)(Line**)) {
 	if (callback != NULL) {
-		if (head != NULL) {
-			return callback(&head);
-		}
-		else {
-			return callback(head);
-		}
-		printf("Head pointer is now: %p\n", head);
+		callback(head);
 	}
 	else {
 		printf("Invalid command. Please try again.\n");

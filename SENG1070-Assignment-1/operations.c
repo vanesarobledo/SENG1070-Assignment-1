@@ -554,7 +554,7 @@ Line* summarizeLines(Line** head) {
 		}
 
 		// Open file for reading and writing, or creates the file if it doesn't exist
-		summaryFile = fopen(filename, "a+");
+		summaryFile = fopen(filename, "w+");
 		if (summaryFile == NULL) {
 			// Exit if there is a failure to open file
 			printf("Error opening file. Exiting program...\n");
