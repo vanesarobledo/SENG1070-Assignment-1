@@ -29,8 +29,8 @@ typedef struct Line {
 // FUNCTION PROTOYPES
 
 // File Functions
-void loadFile(FILE**, Line**, char[]);
-void saveFile(FILE**, Line**, char[]);
+void loadFile(FILE*, Line**, char[]);
+void saveFile(FILE*, Line**, char[]);
 Line* storeFileData(FILE*);
 
 // Linked List Functions

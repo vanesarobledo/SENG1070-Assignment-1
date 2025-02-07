@@ -15,16 +15,15 @@
 
 // FUNCTION : loadFile
 // DESCRIPTION :
-//			This function asks a user for the name of a file and loads it (or creates it if it doesn't exist)
-//			and returns the file pointer
+//			This function asks a user for the name of a file and loads it (or creates it if it doesn't exist) and returns the file pointer
 // PARAMETERS :
-//			FILE** file	:	Pointer to file pointer
+//			FILE* file	:	Pointer to FILE
 //			Line** head	:	Pointer to head of linked list
 //			char mode[]	:	Mode to open file
 // RETURNS :
 //			void		:	This function does not return a value	
 //
-void loadFile(FILE** file, Line** head, char mode[]) {
+void loadFile(FILE* file, Line** head, char mode[]) {
 	char filename[INPUT_SIZE] = ""; // Name of file
 	char ext[] = ".txt"; // File extension
 	char buffer[INPUT_SIZE] = ""; // Buffer for user input
@@ -198,13 +197,13 @@ void freeList(Line** head) {
 // DESCRIPTION :
 //			This function saves any changes to file
 // PARAMETERS :
-//			FILE** file	:	Pointer to file pointer
+//			FILE* file	:	Pointer to FILE
 //			Line** head	:	Pointer to head of linked list
 //			char mode[]	:	Mode to open file
 // RETURNS :
 //			void		:	This function does not return a value	
 //
-void saveFile(FILE** file, Line** head, char mode[]) {
+void saveFile(FILE* file, Line** head, char mode[]) {
 	// If list is empty, do not write new data
 	if (head == NULL) {
 		printf("No data to write to file.\n\n");
