@@ -15,3 +15,4 @@ Line* transformLines(Line**);
 Line* summarizeLines(Line**);
 Line* viewLines(Line**);
 char menuChoice(void);
+void removeNewLine(char*);

@@ -11,7 +11,7 @@
 // DEFINE MACROS
 
 // Define buffer and string sizes
-#define	INPUT_SIZE	100
+#define	INPUT_SIZE	256
 #define	CHAR_SIZE	3
 #define	LINE_SIZE	256
 #define	NUMBER_KEYWORDS	2

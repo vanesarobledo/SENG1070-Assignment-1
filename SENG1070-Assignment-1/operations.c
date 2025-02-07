@@ -63,104 +63,228 @@ Line* filterLines(Line** head) {
 		return ptrNull;
 	}
 
-	// Get keywords from user
-	// Note: Returning strings in C is a pain, even moreso an array of stringgs
-	// For modularity, this should be its own function
-	char buffer[INPUT_SIZE] = ""; // Buffer to store user input
+	char buffer[INPUT_SIZE] = "";  // Buffer to store user input
+	int numKeywords = 1; // Number of keywords to filter; default 1
+
+	// Ask user if they want to filter 1 or 2 keywords
+	bool validFilterKeywords = false;
+	while (!validFilterKeywords) {
+		printf("Filter by one keyword (1)\n");
+		printf("Filter by two keywords (2)\n");
+		printf("> ");
+		fgets(buffer, INPUT_SIZE, stdin);
+		removeNewLine(buffer);
+
+		// Valid input
+		if (sscanf(buffer, "%d", &numKeywords) == 0) {
+			printf("Please enter a valid number.\n");
+		}
+		else {
+			switch (numKeywords) {
+			case 2:
+				printf("Filtering by two keywords.\n");
+				validFilterKeywords = true;
+				break;
+			case 1:
+				printf("Filtering by one keyword.\n");
+				validFilterKeywords = true;
+				break;
+			default:
+				printf("%d is not a valid number of keywords. Please enter a valid number.\n\n", numKeywords);
+				break;
+			}
+		}
+	}
+	
 	char keyword[INPUT_SIZE] = ""; // Store keyword temporarily
 	bool valid = false; // Flag to loop until valid input
-	char keywords[NUMBER_KEYWORDS][INPUT_SIZE] = { "" }; // Array of keywords
 
-	for (int i = 0; i < NUMBER_KEYWORDS; i++) {
-		valid = false;
+	// User filters by 2 keywords
+	if (numKeywords == 2) {
+		char keywords[NUMBER_KEYWORDS][INPUT_SIZE] = { "" }; // Array of keywords
+
+		// Get keyword(s) from user
+		for (int i = 0; i < NUMBER_KEYWORDS; i++) {
+			valid = false;
+			while (!valid) {
+				// Prompt the user to enter keyword
+				printf("Enter keyword %d (case-sensitive): ", i + 1);
+				fgets(buffer, INPUT_SIZE, stdin);
+
+				// Validate input
+				if (sscanf(buffer, "%s", &keyword) == 1) {
+					strncpy(keywords[i], keyword, INPUT_SIZE);
+					valid = true;
+				}
+				else {
+					printf("Invalid input, please try again.\n");
+				}
+			}
+		}
+
+		// Iterate through lines
+		Line* current = *head;
+		Line* next = NULL;
+
+		while (current != NULL) {
+			// Check head node first
+			if (*head == current) {
+				// Check if head = tail
+				if (current->next != NULL) {
+					next = current->next;
+				}
+				else {
+					next = NULL;
+				}
+
+				// If head contains keyword, delete head and set new head
+				if (strstr(current->line, keywords[0]) != NULL || strstr(current->line, keywords[1]) != NULL) {
+					*head = next;
+					free(current);
+				}
+				current = next;
+			}
+			// If next node contains keyword, change pointer of current node to point to next's next
+			else if (current->next != NULL) {
+				// Store pointer of next node
+				next = current->next->next;
+
+				if (strstr(current->next->line, keywords[0]) != NULL || strstr(current->next->line, keywords[1]) != NULL)
+				{
+					// Delete node of linked list
+					free(current->next);
+
+					// Check if next node is tail
+					if (next != NULL) {
+						// Set pointer of current node to next node if it is not the tail
+						current->next = next;
+					}
+					else
+					{
+						// If the node is the tail, set pointer of penultimate node to null to be new tail
+						current->next = ptrNull;
+					}
+				}
+				else {
+					// Iterate through linked list
+					current = next;
+				}
+			}
+			// If at tail node, and there are no keywords, stop iterating
+			else if (current->next == NULL) {
+				current = NULL;
+			}
+			// If node does not contain either keyword, move pointer to iterate list
+			else {
+				current = next;
+			}
+		}
+
+		if (*head != NULL) {
+			printf("\n------------------------------------------------------\n");
+			printf("Filtered Lines (Keywords: '%s' and '%s'):\n", keywords[0], keywords[1]);
+			printf("------------------------------------------------------\n");
+
+			head = viewLines(head);
+
+			return head;
+		}
+		// All lines were filtered
+		else {
+			printf("All lines containing keywords: '%s' and '%s' were filtered.\n\n", keywords[0], keywords[1]);
+			return ptrNull;
+		}
+	}
+
+	// User filters by 1 keyword
+	else {
 		while (!valid) {
 			// Prompt the user to enter keyword
-			printf("Enter keyword %d (case-sensitive): ", i + 1);
+			printf("Enter keyword (case-sensitive): ");
 			fgets(buffer, INPUT_SIZE, stdin);
+
 			// Validate input
 			if (sscanf(buffer, "%s", &keyword) == 1) {
-				strncpy(keywords[i], keyword, INPUT_SIZE);
 				valid = true;
 			}
 			else {
 				printf("Invalid input, please try again.\n");
 			}
-		}
-	}
 
-	// Iterate through lines
-	Line* current = *head;
-	Line* next = NULL;
+			// Iterate through lines
+			Line* current = *head;
+			Line* next = NULL;
 
-	while (current != NULL) {
-		// Check head node first
-		if (*head == current) {
-			// Check if head = tail
-			if (current->next != NULL) {
-				next = current->next;
-			}
-			else {
-				next = NULL;
-			}
+			while (current != NULL) {
+				// Check head node first
+				if (*head == current) {
+					// Check if head = tail
+					if (current->next != NULL) {
+						next = current->next;
+					}
+					else {
+						next = NULL;
+					}
 
-			// If head contains keyword, delete head and set new head
-			if (strstr(current->line, keywords[0]) != NULL || strstr(current->line, keywords[1]) != NULL) {
-				*head = next;
-				free(current);
-			}
-			current = next;
-		}
-		// If next node contains keyword, change pointer of current node to point to next's next
-		else if (current->next != NULL) {
-			// Store pointer of next node
-			next = current->next->next;
-
-			if (strstr(current->next->line, keywords[0]) != NULL || strstr(current->next->line, keywords[1]) != NULL)
-			{
-				// Delete node of linked list
-				free(current->next);
-
-				// Check if next node is tail
-				if (next != NULL) {
-					// Set pointer of current node to next node if it is not the tail
-					current->next = next;
+					// If head contains keyword, delete head and set new head
+					if (strstr(current->line, keyword) != NULL) {
+						*head = next;
+						free(current);
+					}
+					current = next;
 				}
-				else
-				{
-					// If the node is the tail, set pointer of penultimate node to null to be new tail
-					current->next = ptrNull;
+				// If next node contains keyword, change pointer of current node to point to next's next
+				else if (current->next != NULL) {
+					// Store pointer of next node
+					next = current->next->next;
+
+					if (strstr(current->next->line, keyword) != NULL)
+					{
+						// Delete node of linked list
+						free(current->next);
+
+						// Check if next node is tail
+						if (next != NULL) {
+							// Set pointer of current node to next node if it is not the tail
+							current->next = next;
+						}
+						else
+						{
+							// If the next node is the tail, set pointer of penultimate node to null to be new tail
+							current->next = ptrNull;
+						}
+					}
+					else {
+						// Iterate through linked list
+						current = next;
+					}
+				}
+				// If at tail node
+				else if (current->next == NULL) {
+					current = NULL;
+				}
+				// If node does not contain either keyword, move pointer to iterate list
+				else {
+					current = next;
 				}
 			}
+
+			if (*head != NULL) {
+				printf("\n------------------------------------------------------\n");
+				printf("Filtered Lines (Keyword: '%s'):\n", keyword);
+				printf("------------------------------------------------------\n");
+
+				head = viewLines(head);
+
+				return head;
+			}
+			// All lines were filtered
 			else {
-				// Iterate through linked list
-				current = next;
+				printf("All lines containing keyword '%s' were filtered.\n\n", keyword);
+				return ptrNull;
 			}
 		}
-		// If at tail node, and there are no keywords, stop iterating
-		else if (current->next == NULL) {
-			current = NULL;
-		}
-		// If node does not contain either keyword, move pointer to iterate list
-		else {
-			current = next;
-		}
 	}
-
-	if (*head != NULL) {
-		printf("\n------------------------------------------------------\n");
-		printf("Filtered Lines (Keywords: '%s' and '%s'):\n", keywords[0], keywords[1]);
-		printf("------------------------------------------------------\n");
-
-		head = viewLines(head);
-
-		return head;
-	}
-	// All lines were filtered
-	else {
-		printf("All lines containing keywords: '%s' and '%s' were filtered.\n\n", keywords[0], keywords[1]);
-		return ptrNull;
-	}
-
 }
 
 
@@ -398,6 +522,71 @@ Line* summarizeLines(Line** head) {
 	printf("Average Length of Lines: %.2f characters\n", lineLengthAverage);
 	printf("------------------------------------------\n\n");
 
+	// Save summary to file
+	char saveOption = '0'; // Store option char choice to save to file
+
+	FILE* summaryFile = NULL; // Initialize file pointer
+	char filename[INPUT_SIZE] = ""; // Name of file
+	char ext[] = ".txt"; // File extension
+
+	bool validFileName = false; // Flag for valid input
+
+	printf("Save summary to file? (Enter 'y' for yes or other character for no)\n");
+	saveOption = menuChoice();
+	switch (saveOption) {
+	case 'y':
+	case 'Y':
+		while (!validFileName)
+		{
+			// Prompt user for file name
+			printf("Enter name of file (before .txt): ");
+			fgets(buffer, INPUT_SIZE, stdin);
+
+			// Validate input
+			if (sscanf(buffer, "%s", &filename) == 0) {
+				printf("Invalid input. Please try again.\n");
+			}
+			else {
+				// Concatenate file extension and file name
+				strcat(filename, ext);
+				validFileName = true;
+			}
+		}
+
+		// Open file for reading and writing, or creates the file if it doesn't exist
+		summaryFile = fopen(filename, "a+");
+		if (summaryFile == NULL) {
+			// Exit if there is a failure to open file
+			printf("Error opening file. Exiting program...\n");
+			exit(EXIT_FAILURE);
+		}
+
+		// Write summary to file
+		fprintf(summaryFile, "Summary:\n");
+		fprintf(summaryFile, "Total Number of Lines: %d\n", lineCount);
+		if (keywordFrequency == 0) {
+			fprintf(summaryFile, "No instances of '%s' found.\n", keyword);
+		}
+		else if (keywordFrequency == 1) {
+			fprintf(summaryFile, "Frequency of '%s': %d time\n", keyword, keywordFrequency);
+		}
+		else {
+			fprintf(summaryFile, "Frequency of '%s': %d times\n", keyword, keywordFrequency);
+		}
+		fprintf(summaryFile, "Average Length of Lines: %.2f characters\n", lineLengthAverage);
+
+		// Close the file safely
+		if (fclose(summaryFile) != 0) {
+			printf("Error closing file. Exiting program...\n");
+			exit(EXIT_FAILURE);
+		}
+		printf("Summary saved to file successfully.\n\n");
+
+	// User chooses not to save summary to file
+	default:
+		break;
+	}
+
 	return *head;
 }
 
@@ -415,9 +604,9 @@ char menuChoice(void) {
 	bool valid = false; // Flag to loop user input
 
 	while (!valid) {
-		printf("Enter choice: ");
+		printf("> ");
 		fgets(buffer, INPUT_SIZE, stdin); // Get user input with fgets()
-		buffer[strlen(buffer) - 1] = '\0'; // Remove trailing newline character input
+		removeNewLine(buffer);
 		if (sscanf(buffer, "%c", &charInput) == 0) { // Validate user input with sscanf() 
 			printf("Invalid input. Please try again.\n");
 		}
@@ -427,4 +616,16 @@ char menuChoice(void) {
 		}
 	}
 	return charInput; // Return user character choice
+}
+
+// FUNCTION : removeNewLine
+// DESCRIPTION :
+//		 This function removes the trailing newline character '\n' from fgets()
+// PARAMETERS :
+//		 char* buffer	:	Buffer from fgets
+// RETURNS :
+//		 void
+//
+void removeNewLine(char* buffer) {
+	buffer[strlen(buffer) - 1] = '\0'; // Null-termination
 }

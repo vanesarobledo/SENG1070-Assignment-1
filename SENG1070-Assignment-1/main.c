@@ -15,6 +15,7 @@
 
 // FUNCTION PROTOTYPES
 void help(void);
+void test(void);
 void secret(void);
 void kris(void);
 void exitProgram(Line**);
@@ -34,6 +35,7 @@ int main(void)
 
 	Helper commands[] = {
 		{"help", help},
+		{"test", test},
 		{"secret", secret},
 		{"kris", kris}
 	};
@@ -82,7 +84,7 @@ int main(void)
 	printf("SENG1070 Assignment 1 - File Processing and Function Pointers in C\n");
 	printf("by Vanesa Robledo\n");
 	printf("===================================================================\n");
-	printf("Load a file by typing 'load'. View the data with 'view' and process the data with one of 'filter', 'transform', or 'summarize'. Save changes to file with 'save'. Exit the program with 'exit'. For more details, type 'help'.\n");
+	printf("Load a file by typing 'load' and view the data with 'view'.\nProcess the data with one of 'filter', 'transform', or 'summarize'.\nSave changes to file with 'save'.\nExit the program with 'exit'.\nTo view testing-related commands, enter 'test'. For more details, type 'help'.\n");
 
 	while (running) {
 		printf("> ");
@@ -92,6 +94,45 @@ int main(void)
 		{
 			// Reset value of valid command
 			found = false;
+
+			// >>>>>>>>>>>>>>>>> Testing Commands
+			// Loads input.txt automatically
+			if (strcmp(menuChoice, "input") == 0 || strcmp(menuChoice, "input.txt") == 0) {
+				fpFile = fopen("input.txt", "a+");
+				if (fpFile == NULL) {
+					// Exit if there is a failure to open file
+					printf("Error opening file. Exiting program...\n");
+					exit(EXIT_FAILURE);
+				}
+				head = storeFileData(fpFile);
+				found = true;
+			}
+
+			// Saves to output.txt automatically
+			if (strcmp(menuChoice, "output") == 0 || strcmp(menuChoice, "output.txt") == 0) {
+				fpFile = fopen("output.txt", "w+");
+				if (fpFile == NULL) {
+					printf("Error opening file. Exiting program...\n");
+					exit(EXIT_FAILURE);
+				}
+				Line* current = head;
+				while (current != NULL) {
+					// Ensure line isn't empty
+					if (strlen(current->line) != 0) {
+						// Write to file
+						if (fprintf(fpFile, "%s", current->line) > 0) {
+							current = current->next;
+						}
+					}
+				}
+				if (fclose(fpFile) != 0) {
+					printf("Error closing file.\n");
+					exit(EXIT_FAILURE);
+				}
+					printf("Data saved to file successfully.\n\n");
+					found = true;
+				}
+			// >>>>>>>>>>>>>>>>> End Testing Commands
 
 			// Helper Commands
 			for (int i = 0; i < knumCommands; i++)
@@ -149,7 +190,7 @@ int main(void)
 			// Invalid Input
 			if (!found) {
 				printf("Invalid menu option. Type 'help' for a list of commands.\n\n");
-			}
+			} 
 		}
 
 	}
@@ -175,11 +216,27 @@ void help(void) {
 	printf("File Commands:\n");
 	printf("------------------------------------------------------\n");
 	printf("view:\t\tThis option displays the data loaded from the .txt file.\n\n");
-	printf("filter:\t\tThis option allows you to enter two keywords to filter the lines of the file.\n\t\tIf one of the keywords is present in the line, the line is deleted.\n\n");
+	printf("filter:\t\tThis option allows you to enter one or two keywords to filter the lines of the file.\n\t\tIf one of the keyword(s) is present in the line, the line is deleted.\n\n");
 	printf("transform:\tThis option allows you to transform each line of the file depending on a transformation rule:\n\t\tuppercase (u/U), lowercase (l/L), or reverse. (r/R).\n\n");
 	printf("summarize:\tThis option allows you to enter a keyword and displays the total number of lines in the file,\n\t\tthe frequency of the keyword you specified, and the average length of each line.\n\n");
+	printf("\ntest:\t\tShows testing-related commands.\n");
 	printf("\nsecret:\t\tShows secret commands.\n\n");
 	printf("exit:\t\tThis option exits the program.\n\n");
+}
+
+//
+// FUNCTION : test
+// DESCRIPTION :
+//		 This function prints testing-related commands to the screen.
+// PARAMETERS :
+//		 void	:	This function does not take any parameters.
+// RETURNS :
+//		void	:	This function does not return a value.
+//
+void test(void) {
+	printf("input\tEnter 'input' or 'input.txt' in the menu to automatically load input.txt for testing purposes.\n");
+	printf("output\tEnter 'output' or 'output.txt' in the menu to automatically save changes to output.txt for testing purposes.\n");
+	printf("\tNote about output: 'summarize' provides the option to save to an output file.\n\n");
 }
 
 //
@@ -192,8 +249,8 @@ void help(void) {
 //		void	:	This function does not return a value.
 //
 void secret(void) {
+	printf("\tEnter 'kris' in the menu for a secret message.\n");
 	printf("\tThere is an extra rule to transform lines: Enter '*' to change every line to 'Glory to Arstotzka.'\n");
-	printf("\tEnter 'kris' in the menu for a secret message.\n\n");
 }
 
 //
