@@ -169,7 +169,7 @@ void help(void) {
 	printf("------------------------------------------------------\n");
 	printf("File Processing Commands:\n");
 	printf("------------------------------------------------------\n");
-	printf("load:\t\tThis option data from a .txt file after you provide the name.\n\t\tIf there is nothing in the file, then data will not be loaded. The maximum line size is 200 characters.\n\n");
+	printf("load:\t\tThis option loads data from a .txt file after you provide the name.\n\t\tIf there is nothing in the file, then data will not be loaded. The maximum line size is 256 characters.\n\n");
 	printf("save:\t\tThis option saves any filtered or transformed lines to a file.\n\t\tIf you specify the name of a file that already exists, it will overwrite the data. \n\n");
 	printf("------------------------------------------------------\n");
 	printf("File Commands:\n");
