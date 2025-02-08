@@ -62,7 +62,12 @@ int main(void)
 		{"filter", filterLines},
 		{"transform", transformLines},
 		{"summarize", summarizeLines},
-		{"exit", exitProgram}
+		{"exit", exitProgram},
+		{"1", filterLines},
+		{"2", transformLines},
+		{"3", summarizeLines},
+		{"4", viewLines},
+		{"7", exit}
 	};
 
 	// Define constants
@@ -84,12 +89,21 @@ int main(void)
 	printf("SENG1070 Assignment 1 - File Processing and Function Pointers in C\n");
 	printf("by Vanesa Robledo\n");
 	printf("===================================================================\n");
-	printf("Load a file by typing 'load'.\nView the data with 'view'.\nProcess the data with one of 'filter', 'transform', or 'summarize'.\nSave changes to file with 'save'.\nView testing-related commands with 'test'.\nExit the program with 'exit'.\nFor more details, enter 'help'.\n");
 
 	while (running) {
+		// Lazy Menu
+		printf("Menu: \n");
+		printf("1. filterLines \n");
+		printf("2. transformLines \n");
+		printf("3. summarize \n");
+		printf("4. viewLines\n");
+		printf("5. loadFile\n");
+		printf("6. saveFile\n");
+		printf("7. exit\n");
+		printf("(For more commands, type 'help')\n");
 		printf("> ");
 		fgets(buffer, INPUT_SIZE, stdin); // Get user input
-		_strlwr(buffer); // Convert to lowercase for case insensitivity
+		removeNewLine(buffer);
 		if (sscanf(buffer, "%s", &menuChoice) > 0) // Validate user input
 		{
 			// Reset value of valid command
@@ -146,6 +160,17 @@ int main(void)
 			}
 
 			// File Commands
+			// Lazy menu
+			if (strcmp(menuChoice, "5") == 0) {
+				performFile(fpFile, &head, "a+", loadFile);
+				found = true;
+			}
+			else if (strcmp(menuChoice, "6") == 0) {
+				performFile(fpFile, &head, "w+", saveFile);
+				found = true;
+			}
+
+			// Verbose menu
 			for (int i = 0; i < knumFileCommands; i++)
 			{
 				if (strcmp(menuChoice, dispatchFile[i].command) == 0)
@@ -207,6 +232,11 @@ int main(void)
 //		void	:	This function does not return a value.
 //
 void help(void) {
+	printf("======================================================\n");
+	printf("HELP DOCUMENTATION:\n");
+	printf("======================================================\n");
+	printf("You may either type a number from the menu for improved user experience, or use one of the following keyword commands.\n\n");
+
 	printf("------------------------------------------------------\n");
 	printf("File Processing Commands:\n");
 	printf("------------------------------------------------------\n");
