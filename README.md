@@ -17,9 +17,8 @@ You may either type a number from the menu:
 6. saveFile
 7. exit
 
-or use one of the following keyword commands.
+or use one of the following keyword commands
 
-------------------------------------------------------
 File Processing Commands:
 ------------------------------------------------------
 `load`:           This option loads data from a .txt file after you provide the name.
@@ -28,7 +27,7 @@ File Processing Commands:
 `save`:           This option saves any filtered or transformed lines to a file.
                 If you specify the name of a file that already exists, it will overwrite the data.
 
-------------------------------------------------------
+
 File Commands:
 ------------------------------------------------------
 `view`:           This option displays the data loaded from the .txt file.
