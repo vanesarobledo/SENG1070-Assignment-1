@@ -1,5 +1,4 @@
-# SENG1070 Assignment 1
-## File Processing & Function Pointers in C
+# SENG1070 Assignment 1: File Processing & Function Pointers in C
 
 This was an assignment for my C Programming II class to demonstrate file input and output functions securely, the use of function pointers for increased modularity, and the use of Makefiles to automate the building process.
 
